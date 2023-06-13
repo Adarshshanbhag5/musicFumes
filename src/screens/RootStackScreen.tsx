@@ -1,5 +1,4 @@
 import React from 'react';
-// import {FileSystemProvider} from '../hooks/useFileSystem';
 import {PlaylistProvider} from '../hooks/usePlaylistContext';
 import MusicFumes from './MusicFumes';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -22,9 +21,7 @@ const RootStack = createNativeStackNavigator<RootStackParamlist>();
 const RootStackScreen = () => {
   const darkTheme = useAppThemeStore(state => state.darkMode);
   return (
-    // <View style={{flex: 1}}>
     <SafeAreaView style={{flex: 1}}>
-      {/* <FileSystemProvider> */}
       <PlaylistProvider>
         <NavigationContainer theme={darkTheme ? DarkTheme : DefaultTheme}>
           <RootStack.Navigator
@@ -60,9 +57,7 @@ const RootStackScreen = () => {
           </RootStack.Navigator>
         </NavigationContainer>
       </PlaylistProvider>
-      {/* </FileSystemProvider> */}
     </SafeAreaView>
-    // </View>
   );
 };
 

@@ -18,7 +18,9 @@ const ColorPaletteModal = ({navigation}: Prop) => {
         <View style={styles.color__container}>
           {colors.map(color => (
             <ColorView
-              backgroundColor={color.value}
+              backgroundColor={
+                themeStyle.bg === '#fff' ? color.value[1] : color.value[0]
+              }
               key={color.key}
               size={54}
               navigation={navigation}

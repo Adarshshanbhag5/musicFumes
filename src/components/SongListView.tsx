@@ -78,7 +78,7 @@ const SongListView = ({data, onPress}: SongListViewProps) => {
               style={{
                 backgroundColor: themeStyle.color,
                 borderRadius: 8,
-                marginRight: 15,
+                margin: 8,
               }}
             />
           </TouchableHighlight>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   more_icon__container: {
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 8,
   },
 });
