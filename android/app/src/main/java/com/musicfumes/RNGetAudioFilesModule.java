@@ -16,12 +16,12 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
-import java.io.ByteArrayOutputStream;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import android.os.Environment;
 
 import com.facebook.react.bridge.WritableArray;
@@ -47,49 +47,32 @@ public class RNGetAudioFilesModule extends ReactContextBaseJavaModule {
         return "RNGetAudioFiles";
     }
 
-    public String saveImageToStorageAndGetPath(String pathToImg, Bitmap songImage) throws IOException {
-        try{
-
+    private String saveImageToStorageAndGetPath(String pathToImg, Bitmap songImage) throws IOException {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(pathToImg, true);
             if (songImage != null) {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                songImage.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream.toByteArray();
-                String encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                byte[] imageByte = Base64.decode(encodedImage, Base64.DEFAULT);
-
-                if(byteArray != null) {
-                    saveToStorage(pathToImg, imageByte);
-
-                    return pathToImg;
+                songImage.compress(Bitmap.CompressFormat.JPEG, 25, fos);
+                return pathToImg;
+            }
+        } catch (IOException e) {
+            Log.e("Error saving Image", e.getMessage());
+            throw e;
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    Log.e("Err closing FileO/P", e.getMessage());
                 }
             }
-
-        } catch (IOException e){
-            Log.e("Error savingImageAfter",e.getMessage());
         }
-
         return "";
     }
 
-    public void saveToStorage(String pathToImg, byte[] imageBytes) throws IOException {
-        FileOutputStream fos = null;
-        try {
-            File filePath = new File(pathToImg);
-            fos = new FileOutputStream(filePath, true);
-            fos.write(imageBytes);
-        } catch (IOException e){
-            Log.e("Error saving image => ",e.getMessage());
-        } finally {
-            if (fos != null) {
-                fos.flush();
-                fos.close();
-            }
-        }
-    }
-
-    public void getCoverByPath( String coverFolder, Double coverResizeRatio, int coverSize, String songPath, long songId, WritableMap items) {
+    private void getCoverByPath(String pathToImg, String songPath, WritableMap items) throws IOException {
         MediaMetadataRetriever mmrr = new MediaMetadataRetriever();
-        String encoded = "";
+
         try {
             mmrr.setDataSource(songPath);
             byte[] albumImageData = mmrr.getEmbeddedPicture();
@@ -107,90 +90,89 @@ public class RNGetAudioFilesModule extends ReactContextBaseJavaModule {
                 }
 
                 try {
-                    ContextWrapper contextWrapper = new ContextWrapper(getReactApplicationContext());
-                    File musicDir = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
-                    File covers = new File(musicDir + File.separator + coverFolder
-                            + File.separator + "covers");
-                    boolean success = true;
-                    if (!covers.exists()) {
-                        success = covers.mkdirs();
-                    }
-                    if (success) {
-                        String pathToImg = covers.getAbsolutePath() + "/covers" + songId + ".jpg";
-                        encoded = saveImageToStorageAndGetPath(pathToImg, resized);
-                        items.putString("artwork", "file://" + encoded);
-                    } else {
-                        // Do something else on failure
-                        Log.e("failure","no success failure");
-                    }
+                    String encoded = saveImageToStorageAndGetPath(pathToImg, resized);
+                    items.putString("artwork", "file://" + encoded);
 
                 } catch (Exception e) {
                     // Just let images empty
-                    Log.e("error in image", e.getMessage());
+                    Log.e("error in saving artwork", e.getMessage());
                 }
 
             }
 
-        }catch (Exception e) {
-            Log.e("embedImage", "No embed image");
+        } catch (Exception e) {
+            Log.e("embedImage", "No embed image" + e.getMessage());
+        } finally {
+            mmrr.release();
         }
 
     }
 
-    public void coverCheck(String songPath, long songId, WritableMap items){
+    private void coverCheck(String songPath, long songId, WritableMap items) throws IOException {
         ContextWrapper contextWrapper = new ContextWrapper(getReactApplicationContext());
         File musicDir = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
         File covers = new File(musicDir + File.separator + coverFolder + File.separator + "covers");
+        if (!covers.exists() && !covers.mkdirs()) {
+            Log.e("RNGetAudioFiles","Failed to create covers directory");
+            return;
+        }
         String pathToImg = covers.getAbsolutePath() + "/covers" + songId + ".jpg";
         File file = new File(pathToImg);
-        if(!file.exists()){
-            getCoverByPath( coverFolder, coverResizeRatio, coverSize, songPath, songId, items);
-        }
-        else{
-            items.putString("artwork","file://" + pathToImg );
+        if (!file.exists()) {
+            getCoverByPath(pathToImg, songPath, items);
+        } else {
+            items.putString("artwork", "file://" + pathToImg);
         }
 
     }
-    
+
     @ReactMethod
-    public void getSong( final Callback successCallback , final Callback errorCallback) {
+    public void getSong(final Callback successCallback, final Callback errorCallback) {
         WritableArray jsonArray = new WritableNativeArray();
         String[] projection = new String[]{
                 MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.DATA,MediaStore.Audio.Media.MIME_TYPE
+                MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.MIME_TYPE
         };
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0 AND " + MediaStore.Audio.Media.DURATION + " >= 10000 AND " + MediaStore.Audio.Media.ALBUM + " NOT LIKE 'WhatsApp Audio'";
         Cursor cursor = getCurrentActivity().getContentResolver().query(songUri, projection, selection, null, null);
         try {
             if (cursor != null && cursor.getCount() > 0) {
-                int idColumn = cursor.getColumnIndex(android.provider.MediaStore.Audio.Media._ID);
+                int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
+                int albumColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM);
+                int artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
+                int titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE);
+                int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
+                int dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                int mimeTypeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE);
                 cursor.moveToFirst();
                 do {
                     WritableMap item = new WritableNativeMap();
-                    int duration = (cursor.getString(4) == null? 0 : (Integer.parseInt(cursor.getString(4), 10)) / 1000);
-                    String url = "file://" + cursor.getString(5);
-                    item.putString("album", String.valueOf(cursor.getString(0)));
-                    item.putString("artist", String.valueOf(cursor.getString(1)));
-                    item.putString("title", String.valueOf(cursor.getString(2)));
-                    item.putString("id", String.valueOf(cursor.getString(3)));
+                    int duration = (cursor.getString(durationColumn) == null ? 0 : (Integer.parseInt(cursor.getString(4), 10)) / 1000);
+                    String url = cursor.getString(dataColumn);
+                    item.putString("album", cursor.getString(albumColumn));
+                    item.putString("artist", cursor.getString(artistColumn));
+                    item.putString("title", cursor.getString(titleColumn));
+                    item.putString("id", cursor.getString(idColumn));
                     item.putInt("duration", duration);
-                    item.putString("url", url);
-                    item.putString("contentType",String.valueOf(cursor.getString(6)));
+                    item.putString("url", "file://" + url);
+                    item.putString("contentType", cursor.getString(mimeTypeColumn));
 
                     long id = cursor.getLong(idColumn);
-                    String songPath = cursor.getString(5);
-                    coverCheck(songPath,id,item);
+//                    String songPath = cursor.getString(5);
+                    coverCheck(url, id, item);
                     jsonArray.pushMap(item);
                 } while (cursor.moveToNext());
             } else {
                 String msg = "cursor is either null or empty ";
                 Log.e("musicPlay error", msg);
             }
-            cursor.close();
             successCallback.invoke(jsonArray);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | IOException e) {
             errorCallback.invoke(e.toString());
+        } finally {
+            assert cursor != null;
+            cursor.close();
         }
     }
 }
