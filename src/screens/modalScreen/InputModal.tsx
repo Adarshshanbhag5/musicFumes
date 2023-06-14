@@ -35,8 +35,10 @@ export default function InputModal({
               key: GenerateUniqueId(),
             };
             await createPlaylist?.(playlistObj);
+            break;
           case 'renamePlaylist':
             await renamePlaylist?.(route.params.playlistIndex!, input);
+            break;
         }
         ToastAndroid.showWithGravity(
           'Done!',
