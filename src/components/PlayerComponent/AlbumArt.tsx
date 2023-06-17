@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 100,
-    marginBottom: 50,
+    marginBottom: 10,
   },
   albumArt: {
     width: '85%',

@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   playerSeekbar__container: {
     marginTop: 30,
     justifyContent: 'center',
+    marginHorizontal: 10,
   },
   seekBar: {
     width: '80%',

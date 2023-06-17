@@ -78,6 +78,7 @@ export default function InputModal({
               onChangeText={setInput}
               placeholder="Name of playlist"
               style={styles.textInput}
+              autoFocus
             />
           </View>
           <View style={[globalStyle.flex__row__end, styles.control__container]}>
@@ -88,8 +89,17 @@ export default function InputModal({
               style={styles.control__btn}>
               <Text style={styles.text}>Cancel</Text>
             </Touch>
-            <Touch style={styles.control__btn} onPress={okPressHandler}>
-              <Text style={styles.text}>Ok</Text>
+            <Touch
+              style={styles.control__btn}
+              onPress={okPressHandler}
+              disabled={input === '' ? true : false}>
+              <Text
+                style={{
+                  ...styles.text,
+                  color: input === '' ? '#999' : '#B4E197',
+                }}>
+                Ok
+              </Text>
             </Touch>
           </View>
         </View>

@@ -105,6 +105,8 @@ const MusicFumes = () => {
               tabBarIcon: ({color}) => (
                 <MaterialIcons name="search" color={color} size={26} />
               ),
+              lazy: true,
+              lazyPlaceholder: () => <ActivityIndicator />,
             }}
           />
           <Tab.Screen

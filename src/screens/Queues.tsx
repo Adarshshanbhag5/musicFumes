@@ -1,6 +1,6 @@
-import {Pressable, StyleSheet, TextInput, Vibration, View} from 'react-native';
+import {Pressable, StyleSheet, Vibration, View} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import useCurrentQueue from '../hooks/useCurrentQueue';
 import TrackPlayer, {Track} from 'react-native-track-player';
 import QueueListView from '../components/QueueListView';
@@ -87,6 +87,7 @@ const Queues = () => {
       <View style={{flex: 1, paddingTop: 5}}>
         {listData && (
           <DraggableFlatList
+            style={{paddingHorizontal: 10}}
             data={listData}
             renderItem={renderItem}
             extraData={trackIndex}
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     borderRadius: 5,
-    borderWidth: 2,
+    borderWidth: 1,
     paddingVertical: 2,
     zIndex: 5,
   },
