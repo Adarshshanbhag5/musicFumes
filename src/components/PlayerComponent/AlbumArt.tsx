@@ -28,7 +28,7 @@ const AlbumArt = ({artwork}: {artwork?: string | number}) => {
             ? {
                 uri: artwork,
               }
-            : require('../../assets/artwork_placeholder.png')
+            : require('../../assets/musicfumes_placeholder_dark.jpg')
         }
         style={[styles.albumArt, animatedStyle]}
       />
