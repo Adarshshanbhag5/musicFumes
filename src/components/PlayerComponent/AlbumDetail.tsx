@@ -36,8 +36,7 @@ export default AlbumDetail;
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
-    marginTop: 25,
+    marginVertical: 10,
     marginHorizontal: 15,
   },
   title: {

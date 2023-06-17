@@ -62,6 +62,7 @@ const Search = ({navigation}: MusicFumesScreenProps<'Search'>) => {
           placeholderTextColor={themeStyle.color}
           value={input}
           onChangeText={setInput}
+          autoFocus
         />
       </View>
       {data && (

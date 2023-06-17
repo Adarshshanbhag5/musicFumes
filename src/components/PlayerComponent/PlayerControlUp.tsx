@@ -40,6 +40,7 @@ const PlayerControlUp = ({track}: {track?: Track}) => {
           name={heart ? 'favorite' : 'favorite-border'}
           color={themeStyle.color}
           size={24}
+          style={styles.icon}
           onPress={() => {
             if (track) {
               setFavoriteSong?.(track.id);
@@ -50,19 +51,24 @@ const PlayerControlUp = ({track}: {track?: Track}) => {
           name="info-outline"
           color={themeStyle.color}
           size={24}
+          style={styles.icon}
           onPress={infoPress}
         />
         <MaterialIcons
           name="playlist-add"
           color={themeStyle.color}
           size={24}
+          style={styles.icon}
           onPress={addPlaylist}
         />
         <MaterialIcons
           name="more-horiz"
           color={themeStyle.bg}
           size={22}
-          style={{backgroundColor: themeStyle.color, borderRadius: 8}}
+          style={{
+            backgroundColor: themeStyle.color,
+            borderRadius: 8,
+          }}
           onPress={optionPress}
         />
       </View>
@@ -71,6 +77,7 @@ const PlayerControlUp = ({track}: {track?: Track}) => {
           name="shuffle"
           color={themeStyle.color}
           size={24}
+          style={styles.icon}
         />
       </View>
     </View>
@@ -84,6 +91,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   left__container: {
-    width: '50%',
+    width: '55%',
+  },
+  icon: {
+    borderRadius: 5,
+    paddingHorizontal: 10,
   },
 });
