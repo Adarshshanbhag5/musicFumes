@@ -43,7 +43,7 @@ const QueueListView = ({
             source={
               data.artwork
                 ? {uri: data.artwork}
-                : require('../assets/artwork_placeholder.png')
+                : require('../assets/musicfumes_placeholder_dark.jpg')
             }
             style={styles.albumArt}
           />

@@ -17,7 +17,7 @@ const NowPlaying = (): JSX.Element => {
             ? {
                 uri: track.artwork,
               }
-            : require('../assets/artwork_placeholder.png')
+            : require('../assets/musicfumes_placeholder_dark.jpg')
         }
         blurRadius={25}
         style={styles.ImageBackground}
