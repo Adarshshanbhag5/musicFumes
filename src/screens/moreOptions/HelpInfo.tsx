@@ -1,15 +1,12 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import React from 'react';
-import SplashScreen from '../SplashScreen';
 
 const HelpInfo = () => {
   return (
     <View style={{flex: 1}}>
-      <SplashScreen />
+      <Text>HelpInfo</Text>
     </View>
   );
 };
 
 export default HelpInfo;
-
-const styles = StyleSheet.create({});

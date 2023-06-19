@@ -2,6 +2,7 @@ import {Pressable, StyleSheet, View} from 'react-native';
 import React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import useAppThemeStore from '../zustand/store';
+import globalStyle from './GlobalStyle';
 
 type RoundBtnPropTypes = {
   iconName: string;
@@ -25,6 +26,7 @@ const RoundBtn = ({
       android_ripple={{color: '#222', borderless: false, foreground: true}}>
       <View
         style={{
+          ...globalStyle.flex__col__center,
           ...styles.btn__container,
           backgroundColor: bg ? bg : accentColor,
         }}>
@@ -41,9 +43,5 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-
-    // margin: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

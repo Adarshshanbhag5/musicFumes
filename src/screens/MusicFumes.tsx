@@ -45,7 +45,7 @@ const MusicFumes = () => {
       }
     }
     setUpPlayer();
-    setTimeout(() => setTimePassed(true), 1000);
+    setTimeout(() => setTimePassed(true), 2000);
   }, []);
 
   if (!isPlayerReady || !hydrated || !timePassed) {

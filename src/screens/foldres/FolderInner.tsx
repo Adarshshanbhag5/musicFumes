@@ -1,6 +1,5 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import React, {useCallback, useContext, useState} from 'react';
-// import FolderListView from '../../components/FolderListView';
+import React, {useCallback} from 'react';
 import SongListView from '../../components/SongListView';
 import AddQueueService from '../../services/AddQueueService';
 import globalStyle from '../../utils/GlobalStyle';

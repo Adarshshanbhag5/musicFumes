@@ -1,7 +1,7 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import {State, usePlaybackState} from 'react-native-track-player';
-import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated';
+import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import useTransition from '../../hooks/animation/useTransition';
 
 const mix = (value: number, x: number, y: number) => {

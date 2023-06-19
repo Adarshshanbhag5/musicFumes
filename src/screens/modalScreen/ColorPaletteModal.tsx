@@ -6,6 +6,7 @@ import {colors} from '../../utils/colors';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {IntroStackParamlist} from '../../types/navigation';
 import {useDarkMode} from '../../zustand/store';
+import globalStyle from '../../utils/GlobalStyle';
 type Prop = NativeStackScreenProps<IntroStackParamlist, 'Colorpalettemodal'>;
 const ColorPaletteModal = ({navigation}: Prop) => {
   const themeStyle = useDarkMode();
@@ -15,7 +16,7 @@ const ColorPaletteModal = ({navigation}: Prop) => {
         <Text style={{...styles.head, color: themeStyle.color}}>
           Accent color
         </Text>
-        <View style={styles.color__container}>
+        <View style={[globalStyle.flex__row__start, styles.color__container]}>
           {colors.map(color => (
             <ColorView
               backgroundColor={
@@ -39,10 +40,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   color__container: {
-    flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
   },
   head: {
     fontWeight: 'bold',
