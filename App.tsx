@@ -10,7 +10,7 @@ import {StatusBar, StyleSheet} from 'react-native';
 import {StoragePermissionProvider} from './src/context/StoragePermissionContext';
 import AppEntry from './src/AppEntry';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import useAppThemeStore, {useDarkMode} from './src/zustand/store';
+import useAppThemeStore from './src/zustand/store';
 import {DarkTheme, DefaultTheme} from '@react-navigation/native';
 
 function App(): JSX.Element {

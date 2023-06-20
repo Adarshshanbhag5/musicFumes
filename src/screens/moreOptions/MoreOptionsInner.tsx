@@ -5,6 +5,7 @@ import Touch from '../../utils/Touch';
 import Settings from './Settings';
 import {MoreOptionStackScreenProps} from '../../types/navigation';
 import {useDarkMode} from '../../zustand/store';
+import globalStyle from '../../utils/GlobalStyle';
 
 const MoreOptionsInner = ({navigation}: MoreOptionStackScreenProps<'more'>) => {
   const themeStyle = useDarkMode();
@@ -20,7 +21,7 @@ const MoreOptionsInner = ({navigation}: MoreOptionStackScreenProps<'more'>) => {
         onPress={() => {
           navigation.navigate('sleep_timer');
         }}>
-        <View style={styles.options__container}>
+        <View style={[globalStyle.flex__row__start, styles.options__container]}>
           <MaterialIcons name="snooze" color={themeStyle.color} size={28} />
           <Text style={{...styles.options__text, color: themeStyle.color}}>
             Sleep timer
@@ -31,7 +32,7 @@ const MoreOptionsInner = ({navigation}: MoreOptionStackScreenProps<'more'>) => {
         onPress={() => {
           navigation.navigate('Help_and_info');
         }}>
-        <View style={styles.options__container}>
+        <View style={[globalStyle.flex__row__start, styles.options__container]}>
           <MaterialIcons name="help" color={themeStyle.color} size={28} />
           <Text style={{...styles.options__text, color: themeStyle.color}}>
             Help and Info
@@ -46,9 +47,6 @@ export default MoreOptionsInner;
 
 const styles = StyleSheet.create({
   options__container: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
     marginVertical: 10,
     paddingLeft: 20,
   },

@@ -1,38 +1,31 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
-import Animated, {withRepeat, withTiming} from 'react-native-reanimated';
+import Animated, {
+  FadeOut,
+  FlipInEasyX,
+  SlideInLeft,
+  SlideOutRight,
+} from 'react-native-reanimated';
+import globalStyle from '../utils/GlobalStyle';
 
 const SplashScreen = () => {
-  const entering = (values: any) => {
-    'worklet';
-    const animations = {
-      originY: withTiming(values.windowHeight / 2, {duration: 3000}),
-      opacity: withTiming(1, {duration: 2000}),
-      transform: [
-        {rotate: withRepeat(withTiming('360deg', {duration: 2000}), -1, true)},
-        {scale: withTiming(1, {duration: 3500})},
-      ],
-    };
-    // console.log(values);
-    const initialValues = {
-      originY: -10,
-      opacity: 0,
-      transform: [{rotate: '0deg'}, {scale: 0.5}],
-    };
-    return {
-      initialValues,
-      animations,
-    };
-  };
   return (
-    <View style={styles.container}>
+    <Animated.View
+      style={[globalStyle.flex__col__center, styles.container]}
+      exiting={FadeOut}>
       <Animated.Image
-        source={require('../assets/react_icon.png')}
+        source={require('../assets/musicfumes_splash.png')}
         style={styles.react__logo}
-        entering={entering}
+        entering={SlideInLeft.duration(1500).springify()}
+        exiting={SlideOutRight.duration(1500).springify()}
       />
-      <Text style={styles.splash__text}>React music player</Text>
-    </View>
+      <Animated.Text
+        style={styles.splash__text}
+        entering={FlipInEasyX.delay(1000)}
+        exiting={FadeOut}>
+        MusicFumes
+      </Animated.Text>
+    </Animated.View>
   );
 };
 
@@ -41,22 +34,18 @@ export default SplashScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-    flexDirection: 'column',
+    backgroundColor: '#2D2B2B',
   },
   splash__text: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 25,
+    elevation: 10,
     textAlign: 'center',
     color: '#fff',
+    letterSpacing: 3,
   },
   react__logo: {
-    width: 70,
-    height: 70,
+    width: '35%',
     resizeMode: 'contain',
-    position: 'absolute',
-    bottom: 10,
   },
 });

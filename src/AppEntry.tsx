@@ -1,4 +1,4 @@
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import React, {useContext} from 'react';
 import {StoragePermissionContext} from './context/StoragePermissionContext';
 import {DarkTheme, NavigationContainer} from '@react-navigation/native';

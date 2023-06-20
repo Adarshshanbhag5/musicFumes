@@ -9,6 +9,7 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import {setDragFalg} from '../services/PlaybackService';
 import useAppThemeStore, {useDarkMode} from '../zustand/store';
+import globalStyle from '../utils/GlobalStyle';
 
 const Queues = () => {
   const {queue, trackIndex} = useCurrentQueue();
@@ -31,7 +32,12 @@ const Queues = () => {
         trackIndex === getIndex() ? accentColor : 'transparent';
       const color = trackIndex === getIndex() ? accentColor : themeStyle.color;
       return (
-        <View style={{...styles.renderItemView, borderColor}}>
+        <View
+          style={{
+            ...styles.renderItemView,
+            ...globalStyle.flex__row__start,
+            borderColor,
+          }}>
           <Pressable
             onLongPress={() => {
               Vibration.vibrate(40);
@@ -121,9 +127,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   renderItemView: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
     borderRadius: 5,
     borderWidth: 1,
     paddingVertical: 2,
