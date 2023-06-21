@@ -1,32 +1,22 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import storageKeys from '../../utils/StorageKeys';
 import ModalWrap from '../../components/ModalWrap';
 import OptionsView from '../../components/OptionsView';
-import {usePlaylistContext} from '../../hooks/usePlaylistContext';
 import {RootStackScreenProps} from '../../types/navigation';
 import {useDarkMode} from '../../zustand/store';
+import {useAppDataStore} from '../../zustand/AppDataStore';
 
 const PlaylistLongPressModal = ({
   route,
   navigation,
 }: RootStackScreenProps<'playlistlongpress'>) => {
-  const {setPlaylist} = usePlaylistContext();
+  const removePlaylist = useAppDataStore(state => state.removePlaylist);
   const themeStyle = useDarkMode();
   async function removePlaylistHandler() {
     try {
       await AsyncStorage.removeItem(route.params.data.key);
-      const res = await AsyncStorage.getItem(storageKeys.PLAYLIST_LIST);
-      if (res != null) {
-        const playlist_list = JSON.parse(res);
-        playlist_list.splice(route.params.data.index, 1);
-        await AsyncStorage.setItem(
-          storageKeys.PLAYLIST_LIST,
-          JSON.stringify(playlist_list),
-        );
-        setPlaylist?.(playlist_list);
-      }
+      removePlaylist(route.params.data.index);
       navigation.goBack();
     } catch (err) {
       console.log(err);

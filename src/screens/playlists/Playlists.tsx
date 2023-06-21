@@ -6,12 +6,12 @@ import GlobalStyle from '../../utils/GlobalStyle';
 import Touch from '../../utils/Touch';
 import PlaylistView from '../../components/PlaylistView';
 import globalStyle from '../../utils/GlobalStyle';
-import {usePlaylistContext} from '../../hooks/usePlaylistContext';
 import {PlaylistStackScreenProps} from '../../types/navigation';
 import useAppThemeStore, {useDarkMode} from '../../zustand/store';
+import {useAppDataStore} from '../../zustand/AppDataStore';
 
 const Playlists = ({navigation}: PlaylistStackScreenProps<'playlists'>) => {
-  const {playlist} = usePlaylistContext();
+  const playlist = useAppDataStore(state => state.playlist);
   const accentColor = useAppThemeStore(state => state.accentColor);
   const themeStyle = useDarkMode();
 
@@ -56,7 +56,10 @@ const Playlists = ({navigation}: PlaylistStackScreenProps<'playlists'>) => {
           </Text>
         </View>
       </Touch>
-      <Touch onPress={() => {}}>
+      <Touch
+        onPress={() => {
+          navigation.navigate('mostPlayed');
+        }}>
         <View style={[GlobalStyle.flex__row__start, styles.list__container]}>
           <MaterialIcons name="whatshot" color={themeStyle.color} size={30} />
           <Text
@@ -65,7 +68,7 @@ const Playlists = ({navigation}: PlaylistStackScreenProps<'playlists'>) => {
           </Text>
         </View>
       </Touch>
-      <Touch onPress={() => {}}>
+      {/* <Touch onPress={() => {}}>
         <View style={[GlobalStyle.flex__row__start, styles.list__container]}>
           <MaterialIcons
             name="not-interested"
@@ -77,7 +80,7 @@ const Playlists = ({navigation}: PlaylistStackScreenProps<'playlists'>) => {
             Not Played
           </Text>
         </View>
-      </Touch>
+      </Touch> */}
       <View style={styles.playlist__container}>
         <Text
           style={{
@@ -86,8 +89,6 @@ const Playlists = ({navigation}: PlaylistStackScreenProps<'playlists'>) => {
           }}>
           Your Playlists
         </Text>
-        {/* <PlaylistView />
-        <PlaylistView /> */}
         {playlist &&
           playlist.map((item, index) => (
             <PlaylistView

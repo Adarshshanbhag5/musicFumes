@@ -1,5 +1,4 @@
 import React from 'react';
-import {PlaylistProvider} from '../hooks/usePlaylistContext';
 import MusicFumes from './MusicFumes';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -22,41 +21,36 @@ const RootStackScreen = () => {
   const darkTheme = useAppThemeStore(state => state.darkMode);
   return (
     <SafeAreaView style={{flex: 1}}>
-      <PlaylistProvider>
-        <NavigationContainer theme={darkTheme ? DarkTheme : DefaultTheme}>
-          <RootStack.Navigator
-            initialRouteName="musicFumes"
-            screenOptions={{headerShown: false}}>
-            <RootStack.Group>
-              <RootStack.Screen name="musicFumes" component={MusicFumes} />
-            </RootStack.Group>
-            <RootStack.Group
-              screenOptions={{
-                presentation: 'transparentModal',
-                headerShown: false,
-              }}>
-              <RootStack.Screen name="input_text" component={InputModal} />
-              <RootStack.Screen
-                name="playlistlongpress"
-                component={PlaylistLongPressModal}
-              />
-              <RootStack.Screen name="option_modal" component={OptionModal} />
-              <RootStack.Screen
-                name="addPlaylist_modal"
-                component={AddPlaylistModal}
-              />
-              <RootStack.Screen
-                name="Colorpalettemodal"
-                component={ColorPaletteModal}
-              />
-              <RootStack.Screen
-                name="songInfo_modal"
-                component={SongInfoModal}
-              />
-            </RootStack.Group>
-          </RootStack.Navigator>
-        </NavigationContainer>
-      </PlaylistProvider>
+      <NavigationContainer theme={darkTheme ? DarkTheme : DefaultTheme}>
+        <RootStack.Navigator
+          initialRouteName="musicFumes"
+          screenOptions={{headerShown: false}}>
+          <RootStack.Group>
+            <RootStack.Screen name="musicFumes" component={MusicFumes} />
+          </RootStack.Group>
+          <RootStack.Group
+            screenOptions={{
+              presentation: 'transparentModal',
+              headerShown: false,
+            }}>
+            <RootStack.Screen name="input_text" component={InputModal} />
+            <RootStack.Screen
+              name="playlistlongpress"
+              component={PlaylistLongPressModal}
+            />
+            <RootStack.Screen name="option_modal" component={OptionModal} />
+            <RootStack.Screen
+              name="addPlaylist_modal"
+              component={AddPlaylistModal}
+            />
+            <RootStack.Screen
+              name="Colorpalettemodal"
+              component={ColorPaletteModal}
+            />
+            <RootStack.Screen name="songInfo_modal" component={SongInfoModal} />
+          </RootStack.Group>
+        </RootStack.Navigator>
+      </NavigationContainer>
     </SafeAreaView>
   );
 };

@@ -9,18 +9,18 @@ import React, {useState} from 'react';
 import globalStyle from '../../utils/GlobalStyle';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SelectableList from '../../components/SelectableList';
-import {usePlaylistContext} from '../../hooks/usePlaylistContext';
 import PlaylistAddService from '../../services/PlaylistAddService';
 import ModalWrap from '../../components/ModalWrap';
 import Touch from '../../utils/Touch';
 import {RootStackScreenProps} from '../../types/navigation';
+import {useAppDataStore} from '../../zustand/AppDataStore';
 
 const AddPlaylistModal = ({
   route,
   navigation,
 }: RootStackScreenProps<'addPlaylist_modal'>) => {
   const [selectId, setSelectId] = useState<string>('');
-  const {playlist} = usePlaylistContext();
+  const playlist = useAppDataStore(state => state.playlist);
 
   async function okHandler() {
     if (selectId != null) {

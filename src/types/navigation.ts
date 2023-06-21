@@ -42,6 +42,7 @@ export type PlaylistStackParamlist = {
   AllSongs: undefined;
   userPlaylist: {data: {name: string; key: string}};
   favoritePlaylist: undefined;
+  mostPlayed: undefined;
 };
 
 export type MoreOptionsStackParamlist = {
