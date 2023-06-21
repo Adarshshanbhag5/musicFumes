@@ -11,20 +11,21 @@ import Touch from '../../utils/Touch';
 import globalStyle from '../../utils/GlobalStyle';
 import GenerateUniqueId from '../../utils/GenerateUniqueId';
 import ModalWrap from '../../components/ModalWrap';
-import {usePlaylistContext} from '../../hooks/usePlaylistContext';
 import {RootStackScreenProps} from '../../types/navigation';
 import {useDarkMode} from '../../zustand/store';
+import {useAppDataStore} from '../../zustand/AppDataStore';
 
 export default function InputModal({
   route,
   navigation,
 }: RootStackScreenProps<'input_text'>) {
-  const {createPlaylist, renamePlaylist} = usePlaylistContext();
+  const createPlaylist = useAppDataStore(state => state.setPlaylist);
+  const renamePlaylist = useAppDataStore(state => state.renamePlaylist);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const themeStyle = useDarkMode();
 
-  async function okPressHandler() {
+  function okPressHandler() {
     if (input != '') {
       try {
         setLoading(true);
@@ -34,10 +35,10 @@ export default function InputModal({
               name: input,
               key: GenerateUniqueId(),
             };
-            await createPlaylist?.(playlistObj);
+            createPlaylist(playlistObj);
             break;
           case 'renamePlaylist':
-            await renamePlaylist?.(route.params.playlistIndex!, input);
+            renamePlaylist(route.params.playlistIndex!, input);
             break;
         }
         ToastAndroid.showWithGravity(

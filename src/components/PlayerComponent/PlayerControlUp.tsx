@@ -4,13 +4,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import React, {useEffect, useState} from 'react';
 import globalStyle from '../../utils/GlobalStyle';
 import {useNavigation} from '@react-navigation/native';
-import {usePlaylistContext} from '../../hooks/usePlaylistContext';
 import {Track} from 'react-native-track-player';
 import {useDarkMode} from '../../zustand/store';
+import {useAppDataStore} from '../../zustand/AppDataStore';
 
 const PlayerControlUp = ({track}: {track?: Track}) => {
   const navigation = useNavigation<any>();
-  const {favoriteList, setFavoriteSong} = usePlaylistContext();
+  const favoriteList = useAppDataStore(state => state.favoriteList);
+  const setFavoriteSong = useAppDataStore(state => state.setFavoriteList);
   const [heart, setHeart] = useState(false);
   const themeStyle = useDarkMode();
   const addPlaylist = () => {
@@ -43,7 +44,7 @@ const PlayerControlUp = ({track}: {track?: Track}) => {
           style={styles.icon}
           onPress={() => {
             if (track) {
-              setFavoriteSong?.(track.id);
+              setFavoriteSong(track.id, heart);
             }
           }}
         />

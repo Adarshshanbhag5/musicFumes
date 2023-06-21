@@ -1,10 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TrackPlayer, {Event, State, Track} from 'react-native-track-player';
 import AddQueueService from './AddQueueService';
+import {setMostPlayedsongs} from '../zustand/AppDataStore';
 
 let queue: Track[] = [];
 let queueDragged = false;
 let wasPausedByDuck = false;
+
+let playbackCounter: number = 0;
+let songPlayedFlag: boolean = false;
+
 const LAST_TRACK = '@last_track';
 
 export const setDragFalg = (flag = false, draggedQueue: Track[]) => {
@@ -82,7 +87,6 @@ export default async function PlaybackService() {
 
   TrackPlayer.addEventListener(Event.PlaybackTrackChanged, async event => {
     console.log('Event.PlaybackTrackChanged', event);
-    await AsyncStorage.setItem(LAST_TRACK, `${event.nextTrack}`);
     // console.log(queueDragged);
     if (queueDragged) {
       // console.log(event.nextTrack);
@@ -90,9 +94,30 @@ export default async function PlaybackService() {
       queueDragged = false;
       AddQueueService(queue, event.nextTrack);
     }
+
+    if (songPlayedFlag) {
+      let track: Track | null;
+      if (event.track != null) {
+        track = await TrackPlayer.getTrack(event.track);
+      } else {
+        track = await TrackPlayer.getTrack(0);
+      }
+      if (track != null) {
+        console.log('Added to mostPlayed', track.title);
+        setMostPlayedsongs(track.id);
+      }
+    }
+    playbackCounter = 0;
+    songPlayedFlag = false;
+
+    await AsyncStorage.setItem(LAST_TRACK, `${event.nextTrack}`);
   });
 
   TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, event => {
     console.log('Event.PlaybackProgressUpdated', event);
+    playbackCounter += 2;
+    if (Math.floor((playbackCounter / event.duration) * 100) >= 30) {
+      songPlayedFlag = true;
+    }
   });
 }
