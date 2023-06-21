@@ -1,30 +1,48 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
-import {fsDataType, musicData} from '../types/data';
+import {musicData, musicTrack} from '../types/data';
 import {NativeModules, Platform} from 'react-native';
-import RNFS from 'react-native-fs';
-import convertMsToTime from '../utils/DurationFromater';
 const {RNGetAudioFiles} = NativeModules;
 
 interface FileSystemStore {
-  mediaStoreData?: musicData[];
-  fsData?: fsDataType[];
+  mediaStoreData: musicTrack[];
+  folders: [string, musicTrack[]][];
+  albums: [string, musicTrack[]][];
 }
 
+type groupType = {
+  folderArray: {[key1: string]: musicTrack[]};
+  albumArray: {[key1: string]: musicTrack[]};
+  musicTrack: musicTrack[];
+};
+
+type groupMediaStoreDataReturnType = {
+  albumArray: [string, musicTrack[]][];
+  folderArray: [string, musicTrack[]][];
+  musicTrackArray: musicTrack[];
+};
+
 export const useFileSystemStore = create<FileSystemStore>()(
-  persist(_ => ({mediaStoreData: [], fsData: []}), {
-    name: 'fileSystem',
-    storage: createJSONStorage(() => AsyncStorage),
-    partialize: state => ({fsData: state.fsData}),
-  }),
+  persist(
+    _ => ({
+      mediaStoreData: new Array<musicTrack>(),
+      folders: new Array<[string, musicTrack[]]>(),
+      albums: new Array<[string, musicTrack[]]>(),
+    }),
+    {
+      name: 'fileSystem',
+      storage: createJSONStorage(() => AsyncStorage),
+      partialize: state => ({mediaStoreData: state.mediaStoreData}),
+    },
+  ),
 );
 
 function getSongs() {
-  return new Promise<musicData[] | undefined>((resolve, reject) => {
+  return new Promise<musicData[]>((resolve, reject) => {
     if (Platform.OS === 'android') {
       RNGetAudioFiles.getSong(
-        (songs: musicData[] | undefined) => {
+        (songs: musicData[]) => {
           resolve(songs);
         },
         (error: any) => {
@@ -35,51 +53,71 @@ function getSongs() {
   });
 }
 
-function setFs(res: musicData[]): fsDataType[] {
-  const rootPath = RNFS.ExternalStorageDirectoryPath;
-  let result = [
-    ...new Set(
-      res.map(
-        item => item.url.replace('file://', '').match(/(.*)[\/\\]/)![1] || '',
-      ),
-    ),
-  ];
-  let arr: fsDataType[] = [];
-  result.forEach(item => {
-    let totalFiles = res.filter(
-      val =>
-        item === val.url.replace('file://', '').match(/(.*)[\/\\]/)![1] || '',
-    );
-    let totalDuration = convertMsToTime(
-      totalFiles.reduce((total, val) => val.duration + total, 0),
-    );
-    let folderHierarchy = item.split(`${rootPath}/`).pop()!.split('/');
-    arr = [
-      ...arr,
+function groupMediaStoreData(data: musicData[]): groupMediaStoreDataReturnType {
+  const groupedData: groupType = data.reduce<groupType>(
+    (
+      group,
       {
-        path: item,
-        files: totalFiles,
-        totalFiles: totalFiles.length,
-        folderHierarchy,
-        totalDuration,
+        album,
+        artist,
+        artwork,
+        contentType,
+        directory,
+        duration,
+        id,
+        title,
+        url,
       },
-    ];
-  });
-  return arr;
+    ) => {
+      const track: musicTrack = {
+        album,
+        artist,
+        artwork,
+        contentType,
+        duration,
+        id,
+        title,
+        url,
+      };
+      if (!group.folderArray[directory]) {
+        group.folderArray[directory] = [];
+      }
+      group.folderArray[directory].push(track);
+      if (!group.albumArray[album]) {
+        group.albumArray[album] = [];
+      }
+      group.albumArray[album].push(track);
+
+      group.musicTrack.push(track);
+      return group;
+    },
+    {folderArray: {}, albumArray: {}, musicTrack: []} as groupType,
+  );
+
+  const albumArray: [string, musicTrack[]][] = Object.entries(
+    groupedData.albumArray,
+  );
+  const folderArray: [string, musicTrack[]][] = Object.entries(
+    groupedData.folderArray,
+  );
+
+  const musicTrackArray: musicTrack[] = groupedData.musicTrack;
+
+  return {albumArray, folderArray, musicTrackArray};
 }
 
 export async function getAllSongs() {
   try {
-    //   setDataLoading(true);
     const res = await getSongs();
     if (res) {
-      const formattedData = setFs(res);
+      const {albumArray, folderArray, musicTrackArray} =
+        groupMediaStoreData(res);
       useFileSystemStore.setState(() => ({
-        mediaStoreData: res,
-        fsData: formattedData,
+        mediaStoreData: musicTrackArray,
+        folders: folderArray,
+        albums: albumArray,
       }));
     }
-    //   setData(res);
   } catch (err) {
     console.log(err);
   }

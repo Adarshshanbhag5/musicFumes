@@ -4,20 +4,21 @@ import SongListView from '../../components/SongListView';
 import AddQueueService from '../../services/AddQueueService';
 import globalStyle from '../../utils/GlobalStyle';
 import {FolderStackScreenProps} from '../../types/navigation';
-import {musicData} from '../../types/data';
+import {musicTrack} from '../../types/data';
 import {useDarkMode} from '../../zustand/store';
+import convertMsToTime from '../../utils/DurationFromater';
 
 const ITEM_HEIGHT = 90;
 
 type renderItemProps = {
-  item: musicData;
+  item: musicTrack;
   index: number;
 };
 
 const FolderInner = ({navigation, route}: FolderStackScreenProps<'Music'>) => {
   const themeStyle = useDarkMode();
   async function handlePress(startIndex: number) {
-    let track = route.params.data.files;
+    let track = route.params.data;
     await AddQueueService(track, startIndex);
     navigation.navigate('NowPlaying');
   }
@@ -41,7 +42,7 @@ const FolderInner = ({navigation, route}: FolderStackScreenProps<'Music'>) => {
           style={{
             ...styles.path__text,
             color: themeStyle.color,
-          }}>{`Path: ${route.params.data.path.replace(
+          }}>{`Path: ${route.params.path.replace(
           '/storage/emulated/0',
           'internal storage',
         )}`}</Text>
@@ -50,17 +51,19 @@ const FolderInner = ({navigation, route}: FolderStackScreenProps<'Music'>) => {
             style={{
               marginRight: 10,
               color: themeStyle.color,
-            }}>{`${route.params.data.totalFiles} songs`}</Text>
+            }}>{`${route.params.data.length} songs`}</Text>
           <Text
             style={{
               marginRight: 10,
               color: themeStyle.color,
-            }}>{`${route.params.data.totalDuration}`}</Text>
+            }}>{`${convertMsToTime(
+            route.params.data.reduce((total, val) => val.duration + total, 0),
+          )}`}</Text>
         </View>
       </View>
       {
         <FlatList
-          data={route.params.data.files}
+          data={route.params.data}
           renderItem={renderItem}
           keyExtractor={item => item.id}
           getItemLayout={(_, index) => ({

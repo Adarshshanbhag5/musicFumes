@@ -10,10 +10,10 @@ import SongListView from '../components/SongListView';
 import AddQueueService from '../services/AddQueueService';
 import {MusicFumesScreenProps} from '../types/navigation';
 import {useFileSystemStore} from '../zustand/FileSystemStore';
-import {musicData} from '../types/data';
+import {musicTrack} from '../types/data';
 import {useDarkMode} from '../zustand/store';
 type renderItemProps = {
-  item: musicData;
+  item: musicTrack;
   index: number;
 };
 const Search = ({navigation}: MusicFumesScreenProps<'Search'>) => {

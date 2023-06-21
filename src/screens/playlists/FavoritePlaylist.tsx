@@ -12,12 +12,12 @@ import convertMsToTime from '../../utils/DurationFromater';
 import globalStyle from '../../utils/GlobalStyle';
 import {useFileSystemStore} from '../../zustand/FileSystemStore';
 import {PlaylistStackScreenProps} from '../../types/navigation';
-import {musicData} from '../../types/data';
+import {musicTrack} from '../../types/data';
 import {useDarkMode} from '../../zustand/store';
 import {useAppDataStore} from '../../zustand/AppDataStore';
 
 type renderItemProps = {
-  item: musicData;
+  item: musicTrack;
   index: number;
 };
 
@@ -25,7 +25,7 @@ const FavoritePlaylist = ({
   navigation,
 }: PlaylistStackScreenProps<'favoritePlaylist'>) => {
   const [loading, setLoading] = useState(true);
-  const [favoriteData, setFavoriteData] = useState<musicData[]>([]);
+  const [favoriteData, setFavoriteData] = useState<musicTrack[]>([]);
   const data = useFileSystemStore(state => state.mediaStoreData);
   const themeStyle = useDarkMode();
   const favoriteList = useAppDataStore(state => state.favoriteList);

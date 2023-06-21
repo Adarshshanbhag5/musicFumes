@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TrackPlayer, {RepeatMode, Track} from 'react-native-track-player';
-import {musicData} from '../types/data';
+import {musicTrack} from '../types/data';
 
 const QUEUE_KEY = '@queue_key';
 
 async function AddQueueService(
-  queue: musicData[] | Track[],
+  queue: musicTrack[] | Track[],
   startIndex: number,
 ) {
   try {

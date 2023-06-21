@@ -2,7 +2,7 @@ import {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import {fsDataType, musicData} from './data';
+import {fsDataType, musicData, musicTrack} from './data';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 
@@ -34,7 +34,7 @@ export type MusicFumesParamlist = {
 
 export type FoldersStackParamlist = {
   InternalStorage: undefined;
-  Music: {data: fsDataType; hierarchyCount: number};
+  Music: {data: musicTrack[]; path: string};
 };
 
 export type PlaylistStackParamlist = {

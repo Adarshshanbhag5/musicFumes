@@ -12,18 +12,18 @@ import convertMsToTime from '../../utils/DurationFromater';
 import globalStyle from '../../utils/GlobalStyle';
 import {useFileSystemStore} from '../../zustand/FileSystemStore';
 import {PlaylistStackScreenProps} from '../../types/navigation';
-import {musicData} from '../../types/data';
+import {musicTrack} from '../../types/data';
 import {useDarkMode} from '../../zustand/store';
 import {useAppDataStore} from '../../zustand/AppDataStore';
 
 type renderItemProps = {
-  item: musicData;
+  item: musicTrack;
   index: number;
 };
 
 const MostPlayed = ({navigation}: PlaylistStackScreenProps<'mostPlayed'>) => {
   const [loading, setLoading] = useState(true);
-  const [mostPlayedData, setMostPlayedData] = useState<musicData[]>([]);
+  const [mostPlayedData, setMostPlayedData] = useState<musicTrack[]>([]);
   const data = useFileSystemStore(state => state.mediaStoreData);
   const themeStyle = useDarkMode();
   const mostPlayedSongs = useAppDataStore(state => state.mostPlayedSongs);
@@ -104,7 +104,7 @@ const MostPlayed = ({navigation}: PlaylistStackScreenProps<'mostPlayed'>) => {
             />
           ) : (
             <Text style={{...styles.empty__text, color: themeStyle.color}}>
-              Oops! favorite list is empty
+              Oops! most played list is empty
             </Text>
           )}
         </>
