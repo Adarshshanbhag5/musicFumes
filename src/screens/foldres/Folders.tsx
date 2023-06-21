@@ -4,31 +4,31 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FolderListView from '../../components/FolderListView';
 import globalStyle from '../../utils/GlobalStyle';
 import {useFileSystemStore} from '../../zustand/FileSystemStore';
-import {fsDataType} from '../../types/data';
+import {musicTrack} from '../../types/data';
 import {FolderStackScreenProps} from '../../types/navigation';
 import {useDarkMode} from '../../zustand/store';
 
 // import RNFS from 'react-native-fs';
 
 const Folders = ({navigation}: FolderStackScreenProps<'InternalStorage'>) => {
-  const fsData = useFileSystemStore(state => state.fsData);
+  const folderArray = useFileSystemStore(state => state.folders);
   const themeStyle = useDarkMode();
 
-  const handlePress = (item: fsDataType) => {
+  const handlePress = (item: [string, musicTrack[]]) => {
     navigation.navigate('Music', {
-      data: item,
-      hierarchyCount: 1,
+      data: item[1],
+      path: item[0],
     });
   };
 
   const renderItem = useCallback(
-    ({item}: {item: fsDataType}) => (
+    ({item}: {item: [string, musicTrack[]]}) => (
       <FolderListView
         onPress={() => {
           handlePress(item);
         }}
-        name={item.folderHierarchy[0]}
-        path={item.path}
+        name={item[0].split('/').pop()!}
+        path={item[0]}
       />
     ),
     [handlePress],
@@ -50,9 +50,9 @@ const Folders = ({navigation}: FolderStackScreenProps<'InternalStorage'>) => {
         <Text style={{color: themeStyle.color}}>20 songs</Text>
         <Text style={{color: themeStyle.color}}>1:38:15</Text>
       </View>
-      {fsData && (
+      {folderArray && (
         <FlatList
-          data={fsData}
+          data={folderArray}
           renderItem={renderItem}
           keyExtractor={(_, index) => index.toString()}
         />

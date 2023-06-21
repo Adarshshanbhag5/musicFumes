@@ -159,8 +159,9 @@ public class RNGetAudioFilesModule extends ReactContextBaseJavaModule {
                     item.putString("contentType", cursor.getString(mimeTypeColumn));
 
                     long id = cursor.getLong(idColumn);
-//                    String songPath = cursor.getString(5);
                     coverCheck(url, id, item);
+                    File file = new File(url);
+                    item.putString("directory",file.getParent());
                     jsonArray.pushMap(item);
                 } while (cursor.moveToNext());
             } else {

@@ -10,10 +10,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import React from 'react';
 import globalStyle from '../utils/GlobalStyle';
 import {useNavigation} from '@react-navigation/native';
-import {musicData} from '../types/data';
+import {musicTrack} from '../types/data';
 import useAppThemeStore, {useDarkMode} from '../zustand/store';
 type SongListViewProps = {
-  data: musicData;
+  data: musicTrack;
   onPress: () => void;
 };
 const SongListView = ({data, onPress}: SongListViewProps) => {
