@@ -2,7 +2,7 @@ import {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import {fsDataType, musicData, musicTrack} from './data';
+import {musicTrack} from './data';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 
@@ -17,10 +17,10 @@ export type RootStackParamlist = {
   musicFumes: undefined;
   input_text: {type: string; playlistIndex: number | null};
   playlistlongpress: {data: {name: string; key: string; index: number}};
-  option_modal: {data: musicData};
-  addPlaylist_modal: {data: musicData};
+  option_modal: {data: musicTrack};
+  addPlaylist_modal: {data: musicTrack};
   Colorpalettemodal: undefined;
-  songInfo_modal: {data: musicData};
+  songInfo_modal: {data: musicTrack};
 };
 
 export type MusicFumesParamlist = {

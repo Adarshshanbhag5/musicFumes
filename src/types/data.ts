@@ -20,11 +20,3 @@ export type musicTrack = {
   contentType: string;
   artwork: string;
 };
-
-export type fsDataType = {
-  path: string;
-  files: musicData[];
-  totalFiles: number;
-  folderHierarchy: string[];
-  totalDuration: string;
-};

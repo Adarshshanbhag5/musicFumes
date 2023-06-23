@@ -25,8 +25,8 @@ function useGetOnboardingStatus() {
   useEffect(() => {
     (async () => {
       try {
-        const isFirstLaunch = await checkFirstLaunch();
-        if (isFirstLaunch) {
+        const FirstLaunch = await checkFirstLaunch();
+        if (FirstLaunch) {
           setFirstLaunch(true);
         } else {
           setFirstLaunch(false);
@@ -38,7 +38,7 @@ function useGetOnboardingStatus() {
       }
     })();
   }, []);
-  return {isFirstLaunch, isFirstLaunchLoading};
+  return {isFirstLaunch, isFirstLaunchLoading, setFirstLaunch};
 }
 
 export default useGetOnboardingStatus;

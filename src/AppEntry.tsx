@@ -1,32 +1,49 @@
-import {ActivityIndicator, View} from 'react-native';
-import React, {useContext} from 'react';
-import {StoragePermissionContext} from './context/StoragePermissionContext';
+import {View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+// import {StoragePermissionContext} from './context/StoragePermissionContext';
 import {DarkTheme, NavigationContainer} from '@react-navigation/native';
 import IntroNavigator from './appIntro/IntroNavigator';
-import useGetOnboardingStatus from './hooks/useGetOnboardingStatus';
+// import useGetOnboardingStatus from './hooks/useGetOnboardingStatus';
 import StoragePermission from './components/StoragePermission';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import RootStackScreen from './screens/RootStackScreen';
+import useAppstartUp from './hooks/useAppStartUp';
+import SplashScreen from './screens/SplashScreen';
+import {useAppStartUpStore} from './zustand/appStartUpStore';
 
 const AppEntry = () => {
-  const {permissionGranted, permissionLoading} = useContext(
-    StoragePermissionContext,
+  // const {permissionGranted, permissionLoading} = useContext(
+  //   StoragePermissionContext,
+  // );
+  // const {isFirstLaunch, isFirstLaunchLoading} = useGetOnboardingStatus();
+  const isFirstLaunch = useAppStartUpStore(state => state.isFirstLaunch);
+  const isFirstLaunchLoading = useAppStartUpStore(
+    state => state.isFirstLaunchLoading,
   );
-  const {isFirstLaunch, isFirstLaunchLoading} = useGetOnboardingStatus();
+  const permissionLoading = useAppStartUpStore(
+    state => state.permissionLoading,
+  );
+  const permissionGranted = useAppStartUpStore(
+    state => state.permissionGranted,
+  );
+  const {isPlayerReady, hydrated, timePassed} = useAppstartUp();
 
-  if (isFirstLaunchLoading || permissionLoading) {
+  if (
+    (isFirstLaunchLoading || permissionLoading || !hydrated || !timePassed) &&
+    !isPlayerReady
+  ) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator />
-      </View>
+      <SafeAreaView style={{flex: 1}}>
+        <SplashScreen />
+      </SafeAreaView>
     );
-  } else if (permissionGranted === false && isFirstLaunch === true) {
+  } else if (isFirstLaunch) {
     return (
       <NavigationContainer theme={DarkTheme}>
         <IntroNavigator />
       </NavigationContainer>
     );
-  } else if (isFirstLaunch === false && permissionGranted === false) {
+  } else if (!isFirstLaunch && !permissionGranted) {
     return (
       <View
         style={{

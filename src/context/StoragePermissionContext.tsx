@@ -1,25 +1,32 @@
-import React, {ReactNode, createContext, useEffect, useState} from 'react';
+import React, {ReactNode, createContext, useEffect} from 'react';
 import {PermissionsAndroid} from 'react-native';
+import {useAppStartUpStore} from '../zustand/appStartUpStore';
 type Prop = {
   children: ReactNode;
 };
 interface PermissionType {
-  permissionGranted: boolean;
-  permissionLoading: boolean;
-  getPermission?: () => void;
-  getPermissionFirstTime?: () => void;
-  setPermissionGranted?: React.Dispatch<React.SetStateAction<boolean>>;
+  // permissionGranted: boolean;
+  // permissionLoading: boolean;
+  getPermission?: () => Promise<void>;
+  // getPermissionFirstTime?: () => void;
+  // setPermissionGranted?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const defaultState = {
-  permissionGranted: false,
-  permissionLoading: true,
+  getPermission: async () => {},
 };
 export const StoragePermissionContext =
   createContext<PermissionType>(defaultState);
 
 export function StoragePermissionProvider({children}: Prop) {
-  const [permissionLoading, setPermissionLoading] = useState<boolean>(true);
-  const [permissionGranted, setPermissionGranted] = useState<boolean>(false);
+  // const [permissionLoading, setPermissionLoading] = useState<boolean>(true);
+  // const [permissionGranted, setPermissionGranted] = useState<boolean>(false);
+
+  const setPermissionGranted = useAppStartUpStore(
+    state => state.setPermissionGranted,
+  );
+  const setPermissionLoading = useAppStartUpStore(
+    state => state.setPermissionLoading,
+  );
 
   useEffect(() => {
     checkPermission();
@@ -39,11 +46,11 @@ export function StoragePermissionProvider({children}: Prop) {
       ) {
         // console.log('You can use the storage');
         setPermissionGranted(true);
-        setPermissionLoading(false);
+        // setPermissionLoading(false);
       } else {
         // console.log('storage permission denied');
         setPermissionGranted(false);
-        setPermissionLoading(false);
+        // setPermissionLoading(false);
       }
     } catch (err) {
       console.log(err);
@@ -94,11 +101,11 @@ export function StoragePermissionProvider({children}: Prop) {
   }
 
   const value = {
-    permissionGranted,
-    permissionLoading,
+    // permissionGranted,
+    // permissionLoading,
     getPermission,
-    getPermissionFirstTime,
-    setPermissionGranted,
+    // getPermissionFirstTime,
+    // setPermissionGranted,
   };
   return (
     <StoragePermissionContext.Provider value={value}>
