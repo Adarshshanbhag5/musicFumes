@@ -17,6 +17,7 @@ import {MusicFumesParamlist} from '../types/navigation';
 // import SplashScreen from './SplashScreen';
 // import {SafeAreaView} from 'react-native-safe-area-context';
 import useAppThemeStore from '../zustand/store';
+import AlbumsNavigator from './albums/AlbumsNavigator';
 
 const Tab = createMaterialTopTabNavigator<MusicFumesParamlist>();
 
@@ -91,6 +92,15 @@ const MusicFumes = () => {
           options={{
             tabBarIcon: ({color}) => (
               <MaterialIcons name="folder" color={color} size={26} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="AlbumsNavigator"
+          component={AlbumsNavigator}
+          options={{
+            tabBarIcon: ({color}) => (
+              <MaterialIcons name="album" color={color} size={26} />
             ),
           }}
         />

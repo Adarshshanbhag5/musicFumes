@@ -4,11 +4,9 @@ import AlbumArt from '../components/PlayerComponent/AlbumArt';
 import AlbumDetail from '../components/PlayerComponent/AlbumDetail';
 import Player from '../components/PlayerComponent/Player';
 import useCurrentTrack from '../hooks/useCurrentTrack';
-// import {useDarkMode} from '../zustand/store';
 
 const NowPlaying = (): JSX.Element => {
   const track = useCurrentTrack();
-  // const themeStyle = useDarkMode();
   if (track) {
     return (
       <ImageBackground

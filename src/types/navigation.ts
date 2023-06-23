@@ -27,6 +27,7 @@ export type MusicFumesParamlist = {
   Queue: undefined;
   NowPlaying: undefined;
   FoldersNavigator: NavigatorScreenParams<FoldersStackParamlist>;
+  AlbumsNavigator: NavigatorScreenParams<AlbumStackParamlist>;
   Search: undefined;
   PlaylistsNavigator: undefined;
   MoreOptions: undefined;
@@ -35,6 +36,11 @@ export type MusicFumesParamlist = {
 export type FoldersStackParamlist = {
   InternalStorage: undefined;
   Music: {data: musicTrack[]; path: string};
+};
+
+export type AlbumStackParamlist = {
+  albums: undefined;
+  albumList: {data: musicTrack[]};
 };
 
 export type PlaylistStackParamlist = {
@@ -63,6 +69,15 @@ export type MusicFumesScreenProps<T extends keyof MusicFumesParamlist> =
 export type FolderStackScreenProps<T extends keyof FoldersStackParamlist> =
   CompositeScreenProps<
     NativeStackScreenProps<FoldersStackParamlist, T>,
+    CompositeScreenProps<
+      MaterialTopTabScreenProps<MusicFumesParamlist>,
+      RootStackScreenProps<keyof RootStackParamlist>
+    >
+  >;
+
+export type AlbumStackScreenProps<T extends keyof AlbumStackParamlist> =
+  CompositeScreenProps<
+    NativeStackScreenProps<AlbumStackParamlist, T>,
     CompositeScreenProps<
       MaterialTopTabScreenProps<MusicFumesParamlist>,
       RootStackScreenProps<keyof RootStackParamlist>
