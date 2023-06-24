@@ -12,12 +12,12 @@ import AddQueueService from '../../services/AddQueueService';
 import convertMsToTime from '../../utils/DurationFromater';
 import globalStyle from '../../utils/GlobalStyle';
 import {PlaylistStackScreenProps} from '../../types/navigation';
-import {musicData} from '../../types/data';
+import {musicTrack} from '../../types/data';
 import {useFileSystemStore} from '../../zustand/FileSystemStore';
 import {useDarkMode} from '../../zustand/store';
 
 type renderItemProps = {
-  item: musicData;
+  item: musicTrack;
   index: number;
 };
 
@@ -26,7 +26,7 @@ const UserPlaylist = ({
   navigation,
 }: PlaylistStackScreenProps<'userPlaylist'>) => {
   const [loading, setLoading] = useState(true);
-  const [playlistData, setPlaylistData] = useState<musicData[]>([]);
+  const [playlistData, setPlaylistData] = useState<musicTrack[]>([]);
   const data = useFileSystemStore(state => state.mediaStoreData);
   const themeStyle = useDarkMode();
   async function getPlaylistData() {
@@ -35,7 +35,7 @@ const UserPlaylist = ({
       const jsonValue = await AsyncStorage.getItem(route.params.data.key);
       if (jsonValue != null) {
         const playlist = JSON.parse(jsonValue);
-        const songs: musicData[] = data!.filter(val =>
+        const songs: musicTrack[] = data!.filter(val =>
           playlist.includes(val.id),
         );
         setPlaylistData(songs);

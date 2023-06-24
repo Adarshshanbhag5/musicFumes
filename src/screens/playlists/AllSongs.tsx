@@ -6,13 +6,13 @@ import convertMsToTime from '../../utils/DurationFromater';
 import globalStyle from '../../utils/GlobalStyle';
 import {PlaylistStackScreenProps} from '../../types/navigation';
 import {useFileSystemStore} from '../../zustand/FileSystemStore';
-import {musicData} from '../../types/data';
+import {musicTrack} from '../../types/data';
 import {useDarkMode} from '../../zustand/store';
 
 const ITEM_HEIGHT = 90;
 
 type renderItemProps = {
-  item: musicData;
+  item: musicTrack;
   index: number;
 };
 

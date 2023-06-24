@@ -21,32 +21,33 @@ type renderItemProps = {
   index: number;
 };
 
-const FavoritePlaylist = ({
-  navigation,
-}: PlaylistStackScreenProps<'favoritePlaylist'>) => {
+const MostPlayed = ({navigation}: PlaylistStackScreenProps<'mostPlayed'>) => {
   const [loading, setLoading] = useState(true);
-  const [favoriteData, setFavoriteData] = useState<musicTrack[]>([]);
+  const [mostPlayedData, setMostPlayedData] = useState<musicTrack[]>([]);
   const data = useFileSystemStore(state => state.mediaStoreData);
   const themeStyle = useDarkMode();
-  const favoriteList = useAppDataStore(state => state.favoriteList);
-  function getFavoriteData() {
-    try {
-      setLoading(true);
-      const songs = data!.filter(val => favoriteList.includes(val.id));
-      setFavoriteData(songs);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const mostPlayedSongs = useAppDataStore(state => state.mostPlayedSongs);
 
   useEffect(() => {
-    if (favoriteList) {
-      getFavoriteData();
+    function getMostPlayedData() {
+      try {
+        setLoading(true);
+        const songs = data!.filter(val =>
+          mostPlayedSongs.some(song => song.songId === val.id),
+        );
+        setMostPlayedData(songs);
+      } finally {
+        setLoading(false);
+      }
     }
-  }, [favoriteList]);
+
+    if (mostPlayedSongs) {
+      getMostPlayedData();
+    }
+  }, [mostPlayedSongs]);
 
   async function handlePress(startIndex: number) {
-    let track = favoriteData;
+    let track = mostPlayedData;
     // console.log(startIndex);
     await AddQueueService(track, startIndex);
     navigation.navigate('NowPlaying');
@@ -54,16 +55,20 @@ const FavoritePlaylist = ({
 
   const renderItem = useCallback(
     ({item, index}: renderItemProps) => (
-      <SongListView
-        data={item}
-        onPress={() => {
-          handlePress(index);
-        }}
-      />
+      <View>
+        <Text style={styles.countText}>
+          Play count:{mostPlayedSongs[index].count}
+        </Text>
+        <SongListView
+          data={item}
+          onPress={() => {
+            handlePress(index);
+          }}
+        />
+      </View>
     ),
     [handlePress],
   );
-
   return (
     <View style={{flex: 1}}>
       {loading ? (
@@ -75,15 +80,15 @@ const FavoritePlaylist = ({
               style={{
                 ...styles.inner__container__text,
                 color: themeStyle.color,
-              }}>{`${favoriteData.length} songs`}</Text>
+              }}>{`${mostPlayedData.length} songs`}</Text>
             <Text
               style={{
                 ...styles.inner__container__text,
                 color: themeStyle.color,
               }}>
-              {favoriteData.length > 0
+              {mostPlayedData.length > 0
                 ? convertMsToTime(
-                    favoriteData.reduce(
+                    mostPlayedData.reduce(
                       (total, val) => val.duration + total,
                       0,
                     ),
@@ -91,15 +96,15 @@ const FavoritePlaylist = ({
                 : '00:00:00'}
             </Text>
           </View>
-          {favoriteData.length > 0 ? (
+          {mostPlayedData.length > 0 ? (
             <FlatList
-              data={favoriteData}
+              data={mostPlayedData}
               renderItem={renderItem}
               keyExtractor={item => item.id}
             />
           ) : (
             <Text style={{...styles.empty__text, color: themeStyle.color}}>
-              Oops! favorite list is empty
+              Oops! most played list is empty
             </Text>
           )}
         </>
@@ -108,7 +113,7 @@ const FavoritePlaylist = ({
   );
 };
 
-export default FavoritePlaylist;
+export default MostPlayed;
 
 const styles = StyleSheet.create({
   innerContainer: {
@@ -129,5 +134,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: 'center',
     color: '#fff',
+  },
+  countText: {
+    paddingHorizontal: 10,
+    color: '#fff',
+    fontSize: 16,
   },
 });

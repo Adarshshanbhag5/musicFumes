@@ -2,7 +2,7 @@ import {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import {fsDataType, musicData} from './data';
+import {musicTrack} from './data';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 
@@ -17,16 +17,17 @@ export type RootStackParamlist = {
   musicFumes: undefined;
   input_text: {type: string; playlistIndex: number | null};
   playlistlongpress: {data: {name: string; key: string; index: number}};
-  option_modal: {data: musicData};
-  addPlaylist_modal: {data: musicData};
+  option_modal: {data: musicTrack};
+  addPlaylist_modal: {data: musicTrack};
   Colorpalettemodal: undefined;
-  songInfo_modal: {data: musicData};
+  songInfo_modal: {data: musicTrack};
 };
 
 export type MusicFumesParamlist = {
   Queue: undefined;
   NowPlaying: undefined;
   FoldersNavigator: NavigatorScreenParams<FoldersStackParamlist>;
+  AlbumsNavigator: NavigatorScreenParams<AlbumStackParamlist>;
   Search: undefined;
   PlaylistsNavigator: undefined;
   MoreOptions: undefined;
@@ -34,7 +35,12 @@ export type MusicFumesParamlist = {
 
 export type FoldersStackParamlist = {
   InternalStorage: undefined;
-  Music: {data: fsDataType; hierarchyCount: number};
+  Music: {data: musicTrack[]; path: string};
+};
+
+export type AlbumStackParamlist = {
+  albums: undefined;
+  albumList: {data: musicTrack[]};
 };
 
 export type PlaylistStackParamlist = {
@@ -42,6 +48,7 @@ export type PlaylistStackParamlist = {
   AllSongs: undefined;
   userPlaylist: {data: {name: string; key: string}};
   favoritePlaylist: undefined;
+  mostPlayed: undefined;
 };
 
 export type MoreOptionsStackParamlist = {
@@ -62,6 +69,15 @@ export type MusicFumesScreenProps<T extends keyof MusicFumesParamlist> =
 export type FolderStackScreenProps<T extends keyof FoldersStackParamlist> =
   CompositeScreenProps<
     NativeStackScreenProps<FoldersStackParamlist, T>,
+    CompositeScreenProps<
+      MaterialTopTabScreenProps<MusicFumesParamlist>,
+      RootStackScreenProps<keyof RootStackParamlist>
+    >
+  >;
+
+export type AlbumStackScreenProps<T extends keyof AlbumStackParamlist> =
+  CompositeScreenProps<
+    NativeStackScreenProps<AlbumStackParamlist, T>,
     CompositeScreenProps<
       MaterialTopTabScreenProps<MusicFumesParamlist>,
       RootStackScreenProps<keyof RootStackParamlist>

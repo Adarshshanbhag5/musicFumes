@@ -1,12 +1,12 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React, {useCallback} from 'react';
-import SongListView from '../../components/SongListView';
-import AddQueueService from '../../services/AddQueueService';
+import {AlbumStackScreenProps} from '../../types/navigation';
 import globalStyle from '../../utils/GlobalStyle';
-import {FolderStackScreenProps} from '../../types/navigation';
-import {musicTrack} from '../../types/data';
 import {useDarkMode} from '../../zustand/store';
 import convertMsToTime from '../../utils/DurationFromater';
+import {musicTrack} from '../../types/data';
+import SongListView from '../../components/SongListView';
+import AddQueueService from '../../services/AddQueueService';
 
 const ITEM_HEIGHT = 90;
 
@@ -15,7 +15,7 @@ type renderItemProps = {
   index: number;
 };
 
-const FolderInner = ({navigation, route}: FolderStackScreenProps<'Music'>) => {
+const AlbumList = ({navigation, route}: AlbumStackScreenProps<'albumList'>) => {
   const themeStyle = useDarkMode();
   async function handlePress(startIndex: number) {
     let track = route.params.data;
@@ -34,34 +34,23 @@ const FolderInner = ({navigation, route}: FolderStackScreenProps<'Music'>) => {
     ),
     [handlePress],
   );
-
   return (
     <View style={{flex: 1}}>
-      <View style={styles.header__container}>
+      <View style={[globalStyle.flex__row__start, styles.details__container]}>
         <Text
           style={{
-            ...styles.path__text,
+            marginRight: 10,
             color: themeStyle.color,
-          }}>{`Path: ${route.params.path.replace(
-          '/storage/emulated/0',
-          'internal storage',
+          }}>{`${route.params.data.length} songs`}</Text>
+        <Text
+          style={{
+            marginRight: 10,
+            color: themeStyle.color,
+          }}>{`${convertMsToTime(
+          route.params.data.reduce((total, val) => val.duration + total, 0),
         )}`}</Text>
-        <View style={[globalStyle.flex__row__start, styles.details__container]}>
-          <Text
-            style={{
-              marginRight: 10,
-              color: themeStyle.color,
-            }}>{`${route.params.data.length} songs`}</Text>
-          <Text
-            style={{
-              marginRight: 10,
-              color: themeStyle.color,
-            }}>{`${convertMsToTime(
-            route.params.data.reduce((total, val) => val.duration + total, 0),
-          )}`}</Text>
-        </View>
       </View>
-      {
+      {route.params.data && (
         <FlatList
           data={route.params.data}
           renderItem={renderItem}
@@ -72,12 +61,12 @@ const FolderInner = ({navigation, route}: FolderStackScreenProps<'Music'>) => {
             index,
           })}
         />
-      }
+      )}
     </View>
   );
 };
 
-export default FolderInner;
+export default AlbumList;
 
 const styles = StyleSheet.create({
   header__container: {
@@ -89,9 +78,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#444',
     paddingBottom: 15,
-  },
-  path__text: {
-    marginBottom: 10,
-    color: '#fff',
+    paddingHorizontal: 10,
+    marginTop: 10,
   },
 });

@@ -10,10 +10,10 @@ import globalStyle from '../../utils/GlobalStyle';
 import TrackPlayer, {State, usePlaybackState} from 'react-native-track-player';
 import useDebouncedValue from '../../hooks/useDebouncedValue';
 import useOnTogglePlayback from '../../hooks/useOnTogglePlayback';
-import {useDarkMode} from '../../zustand/store';
+import useAppThemeStore from '../../zustand/store';
 const underlay = '#69a9cc';
 const PlayerControlBottom = () => {
-  const themeStyle = useDarkMode();
+  const palette = useAppThemeStore(state => state.palette);
   const state = usePlaybackState();
   const isPlaying = state === State.Playing;
   const isLoading = useDebouncedValue(
@@ -38,7 +38,7 @@ const PlayerControlBottom = () => {
         onPress={() => TrackPlayer.skipToPrevious()}>
         <MaterialIcons
           name="skip-previous"
-          color={themeStyle.color}
+          color={palette.titleTextColor}
           size={38}
         />
       </TouchableHighlight>
@@ -49,16 +49,28 @@ const PlayerControlBottom = () => {
           const position = (await TrackPlayer.getPosition()) - 10;
           TrackPlayer.seekTo(position);
         }}>
-        <MaterialIcons name="fast-rewind" color={themeStyle.color} size={26} />
+        <MaterialIcons
+          name="fast-rewind"
+          color={palette.titleTextColor}
+          size={26}
+        />
       </TouchableHighlight>
       <TouchableHighlight
         underlayColor={underlay}
         style={styles.touchAble}
         onPress={onTogglePlayback}>
         {isPlaying ? (
-          <MaterialIcons name="pause" color={themeStyle.color} size={50} />
+          <MaterialIcons
+            name="pause"
+            color={palette.titleTextColor}
+            size={50}
+          />
         ) : (
-          <MaterialIcons name="play-arrow" color={themeStyle.color} size={50} />
+          <MaterialIcons
+            name="play-arrow"
+            color={palette.titleTextColor}
+            size={50}
+          />
         )}
       </TouchableHighlight>
       <TouchableHighlight
@@ -68,13 +80,21 @@ const PlayerControlBottom = () => {
           const position = (await TrackPlayer.getPosition()) + 10;
           TrackPlayer.seekTo(position);
         }}>
-        <MaterialIcons name="fast-forward" color={themeStyle.color} size={26} />
+        <MaterialIcons
+          name="fast-forward"
+          color={palette.titleTextColor}
+          size={26}
+        />
       </TouchableHighlight>
       <TouchableHighlight
         underlayColor={underlay}
         style={styles.touchAble}
         onPress={() => TrackPlayer.skipToNext()}>
-        <MaterialIcons name="skip-next" color={themeStyle.color} size={38} />
+        <MaterialIcons
+          name="skip-next"
+          color={palette.titleTextColor}
+          size={38}
+        />
       </TouchableHighlight>
     </View>
   );

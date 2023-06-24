@@ -5,6 +5,7 @@ import AllSongs from './AllSongs';
 import UserPlaylist from './UserPlaylist';
 import FavoritePlaylist from './FavoritePlaylist';
 import {PlaylistStackParamlist} from '../../types/navigation';
+import MostPlayed from './MostPlayed';
 
 const Stack = createNativeStackNavigator<PlaylistStackParamlist>();
 
@@ -30,6 +31,11 @@ const PlaylistsNavigator = () => {
         name="favoritePlaylist"
         component={FavoritePlaylist}
         options={{headerTitle: 'Favorite songs'}}
+      />
+      <Stack.Screen
+        name="mostPlayed"
+        component={MostPlayed}
+        options={{headerTitle: 'Most played songs'}}
       />
     </Stack.Navigator>
   );

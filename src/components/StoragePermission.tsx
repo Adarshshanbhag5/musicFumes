@@ -3,11 +3,14 @@ import React, {useContext} from 'react';
 import globalStyle from '../utils/GlobalStyle';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {StoragePermissionContext} from '../context/StoragePermissionContext';
+import {useAppStartUpStore} from '../zustand/appStartUpStore';
 
-const StoragePermission = ({withIntro}: {withIntro: boolean}) => {
-  const {getPermission, getPermissionFirstTime, permissionGranted} = useContext(
-    StoragePermissionContext,
+const StoragePermission = () => {
+  const {getPermission} = useContext(StoragePermissionContext);
+  const permissionGranted = useAppStartUpStore(
+    state => state.permissionGranted,
   );
+
   return (
     <View>
       <View style={[globalStyle.flex__col__center, styles.icon__container]}>
@@ -28,14 +31,10 @@ const StoragePermission = ({withIntro}: {withIntro: boolean}) => {
       </View>
       <Pressable
         style={globalStyle.flex__col__center}
-        onPress={() => {
-          if (withIntro) {
-            getPermissionFirstTime?.();
-          } else {
-            getPermission?.();
-          }
+        onPress={async () => {
+          await getPermission();
         }}
-        disabled={permissionGranted ? true : false}>
+        disabled={permissionGranted}>
         <View
           style={
             permissionGranted

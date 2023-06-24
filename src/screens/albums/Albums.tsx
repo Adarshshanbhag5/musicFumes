@@ -6,48 +6,48 @@ import {
   View,
 } from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
-import SongListView from '../components/SongListView';
-import AddQueueService from '../services/AddQueueService';
-import {MusicFumesScreenProps} from '../types/navigation';
-import {useFileSystemStore} from '../zustand/FileSystemStore';
-import {musicTrack} from '../types/data';
-import {useDarkMode} from '../zustand/store';
-type renderItemProps = {
-  item: musicTrack;
-  index: number;
+import {useFileSystemStore} from '../../zustand/FileSystemStore';
+import {useDarkMode} from '../../zustand/store';
+import {AlbumStackScreenProps} from '../../types/navigation';
+import AlbumView from '../../components/AlbumView';
+import {musicTrack} from '../../types/data';
+
+type renderItemProp = {
+  item: [string, musicTrack[]];
 };
-const Search = ({navigation}: MusicFumesScreenProps<'Search'>) => {
-  const data = useFileSystemStore(state => state.mediaStoreData);
+
+const Albums = ({navigation}: AlbumStackScreenProps<'albums'>) => {
+  const data = useFileSystemStore(state => state.albums);
   const themeStyle = useDarkMode();
   const [input, setInput] = useState('');
+
+  function handlePress(data: musicTrack[]) {
+    navigation.navigate('albumList', {data});
+  }
+
   const renderItem = useCallback(
-    ({item, index}: renderItemProps) => (
-      <SongListView
-        data={item}
+    ({item}: renderItemProp) => (
+      <AlbumView
+        name={item[0]}
+        album={item[1]}
         onPress={() => {
-          handlePress(index);
+          handlePress(item[1]);
         }}
       />
     ),
     [handlePress],
   );
+
   const DATA = useMemo(() => {
-    return data?.filter(val => {
+    return data.filter(val => {
       if (input === '') {
-        return null;
-      } else if (
-        val.title.toLowerCase().includes(input.toLowerCase()) ||
-        val.artist.toLowerCase().includes(input.toLowerCase())
-      ) {
+        return val;
+      } else if (val[0].toLowerCase().includes(input.toLowerCase())) {
         return val;
       }
     });
   }, [input]);
-  async function handlePress(startIndex: number) {
-    console.log(startIndex);
-    await AddQueueService(DATA!, startIndex);
-    navigation.navigate('NowPlaying');
-  }
+
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.search__box__container}>
@@ -57,7 +57,7 @@ const Search = ({navigation}: MusicFumesScreenProps<'Search'>) => {
             color: themeStyle.color,
             borderColor: themeStyle.color,
           }}
-          placeholder="Search by title,album,artist"
+          placeholder="Search by album"
           placeholderTextColor={themeStyle.color}
           value={input}
           onChangeText={setInput}
@@ -67,14 +67,14 @@ const Search = ({navigation}: MusicFumesScreenProps<'Search'>) => {
         <FlatList
           data={DATA}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(_, index) => index.toString()}
         />
       )}
     </KeyboardAvoidingView>
   );
 };
 
-export default Search;
+export default Albums;
 
 const styles = StyleSheet.create({
   container: {

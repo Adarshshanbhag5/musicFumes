@@ -4,17 +4,18 @@ import ModalWrap from '../../components/ModalWrap';
 import OptionsView from '../../components/OptionsView';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import globalStyle from '../../utils/GlobalStyle';
-import {usePlaylistContext} from '../../hooks/usePlaylistContext';
 import TrackPlayer from 'react-native-track-player';
 import {RootStackScreenProps} from '../../types/navigation';
 import {useDarkMode} from '../../zustand/store';
+import {useAppDataStore} from '../../zustand/AppDataStore';
 
 const OptionModal = ({
   route,
   navigation,
 }: RootStackScreenProps<'option_modal'>) => {
   const [heart, setHeart] = useState(false);
-  const {favoriteList, setFavoriteSong} = usePlaylistContext();
+  const favoriteList = useAppDataStore(state => state.favoriteList);
+  const setFavoriteSong = useAppDataStore(state => state.setFavoriteList);
   const themeStyle = useDarkMode();
   useEffect(() => {
     if (favoriteList) {
@@ -56,7 +57,7 @@ const OptionModal = ({
           color={themeStyle.color}
           size={26}
           onPress={() => {
-            setFavoriteSong?.(route.params.data.id);
+            setFavoriteSong(route.params.data.id, heart);
           }}
         />
       </View>

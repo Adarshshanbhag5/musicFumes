@@ -5,25 +5,26 @@ type AlbumDetailProps = {
   title: string;
   artist: string;
   album: string;
+  color?: string;
 };
-const AlbumDetail = ({title, artist, album}: AlbumDetailProps) => {
+const AlbumDetail = ({title, artist, album, color}: AlbumDetailProps) => {
   const themeStyle = useDarkMode();
   return (
     <View style={styles.container}>
       <Text
-        style={{...styles.title, color: themeStyle.color}}
+        style={{...styles.title, color: color ? color : themeStyle.color}}
         ellipsizeMode="tail"
         numberOfLines={1}>
         {title}
       </Text>
       <Text
-        style={{...styles.text, color: themeStyle.color}}
+        style={{...styles.text, color: color ? color : themeStyle.color}}
         ellipsizeMode="tail"
         numberOfLines={1}>
         {artist}
       </Text>
       <Text
-        style={{...styles.text, color: themeStyle.color}}
+        style={{...styles.text, color: color ? color : themeStyle.color}}
         ellipsizeMode="tail"
         numberOfLines={1}>
         {album}
