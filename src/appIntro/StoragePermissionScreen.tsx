@@ -1,7 +1,6 @@
 import {StyleSheet, View} from 'react-native';
-import React, {useContext} from 'react';
+import React from 'react';
 import RoundBtn from '../utils/RoundBtn';
-// import {StoragePermissionContext} from '../context/StoragePermissionContext';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {IntroStackParamlist} from '../types/navigation';
 import StoragePermission from '../components/StoragePermission';
@@ -9,22 +8,23 @@ import {useAppStartUpStore} from '../zustand/appStartUpStore';
 type Prop = NativeStackScreenProps<IntroStackParamlist, 'Permission'>;
 
 const StoragePermissionScreen = ({navigation}: Prop) => {
-  // const {permissionGranted} = useContext(StoragePermissionContext);
   const permissionGranted = useAppStartUpStore(
     state => state.permissionGranted,
   );
   return (
     <View style={styles.container}>
-      <StoragePermission withIntro={true} />
+      <StoragePermission />
       <View style={styles.next__btn}>
-        <RoundBtn
-          iconColor={'#000'}
-          iconName={'navigate-next'}
-          onPress={() => {
-            navigation.navigate('Preferences');
-          }}
-          disabled={!permissionGranted ? true : false}
-        />
+        {permissionGranted && (
+          <RoundBtn
+            iconColor={'#000'}
+            iconName={'navigate-next'}
+            onPress={() => {
+              navigation.navigate('Preferences');
+            }}
+            disabled={!permissionGranted ? true : false}
+          />
+        )}
       </View>
       <View style={styles.prev__btn}>
         <RoundBtn

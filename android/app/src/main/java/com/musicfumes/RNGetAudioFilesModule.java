@@ -2,7 +2,10 @@ package com.musicfumes;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.palette.graphics.Palette;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -24,6 +27,7 @@ import java.io.IOException;
 
 import android.os.Environment;
 
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
@@ -174,6 +178,48 @@ public class RNGetAudioFilesModule extends ReactContextBaseJavaModule {
         } finally {
             assert cursor != null;
             cursor.close();
+        }
+    }
+
+    private String getHex(int rgb) {
+        return String.format("#%06X", 0xFFFFFF & rgb);
+    }
+
+    @ReactMethod
+    public void getPalette(String imageUrl, ReadableMap config, Promise promise){
+        try {
+            Bitmap image = BitmapFactory.decodeFile(imageUrl);
+            Palette.from(image).generate(palette -> {
+                WritableMap colorPalette = Arguments.createMap();
+
+                if(palette!=null) {
+                    Palette.Swatch dominant = palette.getDominantSwatch();
+                    if(dominant!=null) {
+                        colorPalette.putString("rgb", getHex(dominant.getRgb()));
+                        colorPalette.putString("titleTextColor",getHex(dominant.getTitleTextColor()));
+                        colorPalette.putString("bodyTextColor",getHex(dominant.getBodyTextColor()));
+                    }
+                    else{
+                        colorPalette.putString("rgb", config.getString("rgb"));
+                        colorPalette.putString("titleTextColor",config.getString("titleTextColor"));
+                        colorPalette.putString("bodyTextColor",config.getString("bodyTextColor"));
+                    }
+                    colorPalette.putString("darkVibrant",getHex(palette.getDarkVibrantColor(1)));
+                    colorPalette.putString("lightVibrant", getHex(palette.getLightVibrantColor(1)));
+                    colorPalette.putString("darkMuted",getHex(palette.getDarkMutedColor(1)));
+                    colorPalette.putString("lightMuted",getHex(palette.getLightMutedColor(1)));
+                }
+                else{
+                    colorPalette.putString("darkMuted",config.getString("darkVibrant"));
+                    colorPalette.putString("lightVibrant", config.getString("lightVibrant"));
+                    colorPalette.putString("darkMuted",config.getString("darkMuted"));
+                    colorPalette.putString("lightMuted",config.getString("lightMuted"));
+                }
+                promise.resolve(colorPalette);
+            });
+        }
+        catch(RuntimeException e){
+            promise.reject("error",e.getMessage());
         }
     }
 }

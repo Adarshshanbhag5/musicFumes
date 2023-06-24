@@ -5,11 +5,12 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {StoragePermissionContext} from '../context/StoragePermissionContext';
 import {useAppStartUpStore} from '../zustand/appStartUpStore';
 
-const StoragePermission = ({withIntro}: {withIntro: boolean}) => {
+const StoragePermission = () => {
   const {getPermission} = useContext(StoragePermissionContext);
   const permissionGranted = useAppStartUpStore(
     state => state.permissionGranted,
   );
+
   return (
     <View>
       <View style={[globalStyle.flex__col__center, styles.icon__container]}>
@@ -31,11 +32,7 @@ const StoragePermission = ({withIntro}: {withIntro: boolean}) => {
       <Pressable
         style={globalStyle.flex__col__center}
         onPress={async () => {
-          // if (withIntro) {
-          //   getPermissionFirstTime?.();
-          // } else {
-          await getPermission?.();
-          // }
+          await getPermission();
         }}
         disabled={permissionGranted}>
         <View

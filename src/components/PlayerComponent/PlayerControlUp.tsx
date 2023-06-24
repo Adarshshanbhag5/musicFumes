@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react';
 import globalStyle from '../../utils/GlobalStyle';
 import {useNavigation} from '@react-navigation/native';
 import {Track} from 'react-native-track-player';
-import {useDarkMode} from '../../zustand/store';
+import useAppThemeStore from '../../zustand/store';
 import {useAppDataStore} from '../../zustand/AppDataStore';
 
 const PlayerControlUp = ({track}: {track?: Track}) => {
@@ -13,7 +13,7 @@ const PlayerControlUp = ({track}: {track?: Track}) => {
   const favoriteList = useAppDataStore(state => state.favoriteList);
   const setFavoriteSong = useAppDataStore(state => state.setFavoriteList);
   const [heart, setHeart] = useState(false);
-  const themeStyle = useDarkMode();
+  const palette = useAppThemeStore(state => state.palette);
   const addPlaylist = () => {
     if (track) {
       navigation.navigate('addPlaylist_modal', {data: track});
@@ -39,7 +39,7 @@ const PlayerControlUp = ({track}: {track?: Track}) => {
       <View style={[globalStyle.flex__row__space, styles.left__container]}>
         <MaterialIcons
           name={heart ? 'favorite' : 'favorite-border'}
-          color={themeStyle.color}
+          color={palette.titleTextColor}
           size={24}
           style={styles.icon}
           onPress={() => {
@@ -50,24 +50,24 @@ const PlayerControlUp = ({track}: {track?: Track}) => {
         />
         <MaterialIcons
           name="info-outline"
-          color={themeStyle.color}
+          color={palette.titleTextColor}
           size={24}
           style={styles.icon}
           onPress={infoPress}
         />
         <MaterialIcons
           name="playlist-add"
-          color={themeStyle.color}
+          color={palette.titleTextColor}
           size={24}
           style={styles.icon}
           onPress={addPlaylist}
         />
         <MaterialIcons
           name="more-horiz"
-          color={themeStyle.bg}
+          color={palette.rgb}
           size={22}
           style={{
-            backgroundColor: themeStyle.color,
+            backgroundColor: palette.titleTextColor,
             borderRadius: 8,
           }}
           onPress={optionPress}
@@ -76,7 +76,7 @@ const PlayerControlUp = ({track}: {track?: Track}) => {
       <View style={globalStyle.flex__row__space}>
         <MaterialCommunityIcons
           name="shuffle"
-          color={themeStyle.color}
+          color={palette.titleTextColor}
           size={24}
           style={styles.icon}
         />

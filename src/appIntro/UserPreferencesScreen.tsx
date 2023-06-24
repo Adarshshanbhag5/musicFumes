@@ -1,9 +1,8 @@
 import {Pressable, StyleSheet, Switch, Text, View} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import globalStyle from '../utils/GlobalStyle';
 import useAppThemeStore from '../zustand/store';
 import RoundBtn from '../utils/RoundBtn';
-// import {StoragePermissionContext} from '../context/StoragePermissionContext';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {IntroStackParamlist} from '../types/navigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,7 +11,6 @@ type Prop = NativeStackScreenProps<IntroStackParamlist, 'Preferences'>;
 const UserPreferencesScreen = ({navigation}: Prop) => {
   const accentColor = useAppThemeStore(state => state.accentColor);
   const setIsFirstLaunch = useAppStartUpStore(state => state.setIsFirstLaunch);
-  // const {setPermissionGranted} = useContext(StoragePermissionContext);
   const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   return (
@@ -53,7 +51,6 @@ const UserPreferencesScreen = ({navigation}: Prop) => {
           iconColor={'#000'}
           iconName={'done'}
           onPress={async () => {
-            // setPermissionGranted?.(true);
             setIsFirstLaunch(false);
             await AsyncStorage.setItem('@user_onboarded', 'true');
           }}

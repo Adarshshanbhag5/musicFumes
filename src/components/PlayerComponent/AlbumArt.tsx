@@ -1,8 +1,9 @@
-import {StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {State, usePlaybackState} from 'react-native-track-player';
 import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import useTransition from '../../hooks/animation/useTransition';
+import useAppThemeStore from '../../zustand/store';
 
 const mix = (value: number, x: number, y: number) => {
   'worklet';
@@ -19,19 +20,30 @@ const AlbumArt = ({artwork}: {artwork?: string | number}) => {
       transform: [{scale}],
     };
   });
+  const palette = useAppThemeStore(state => state.palette);
 
   return (
     <View style={styles.image__container}>
-      <Animated.Image
-        source={
-          artwork
-            ? {
-                uri: artwork,
-              }
-            : require('../../assets/musicfumes_placeholder_dark.jpg')
-        }
-        style={[styles.albumArt, animatedStyle]}
-      />
+      <Animated.View
+        style={[
+          styles.image__wrap,
+          {
+            backgroundColor: palette.rgb,
+            shadowColor: palette.darkMuted,
+          },
+          animatedStyle,
+        ]}>
+        <Image
+          source={
+            artwork
+              ? {
+                  uri: artwork,
+                }
+              : require('../../assets/musicfumes_placeholder_dark.jpg')
+          }
+          style={styles.albumArt}
+        />
+      </Animated.View>
     </View>
   );
 };
@@ -46,12 +58,17 @@ const styles = StyleSheet.create({
     marginTop: 100,
     marginBottom: 10,
   },
-  albumArt: {
+  image__wrap: {
     width: '85%',
-    height: 320,
-    resizeMode: 'cover',
-    shadowColor: '#000',
+    elevation: 10,
     shadowRadius: 10,
     borderRadius: 10,
+  },
+  albumArt: {
+    width: '100%',
+    height: 320,
+    resizeMode: 'cover',
+    borderRadius: 10,
+    borderWidth: 1,
   },
 });

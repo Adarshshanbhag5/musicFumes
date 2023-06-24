@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
+import {useAppStartUpStore} from '../zustand/appStartUpStore';
 
 const USER_ONBOARDED = '@user_onboarded';
 
@@ -20,16 +21,19 @@ async function checkFirstLaunch() {
 }
 
 function useGetOnboardingStatus() {
-  const [isFirstLaunch, setFirstLaunch] = useState(false);
-  const [isFirstLaunchLoading, setFirstLaunchLoading] = useState(true);
+  const setFirstLaunchLoading = useAppStartUpStore(
+    state => state.setIsFirstLaunchLoading,
+  );
+  const setIsFirstLaunch = useAppStartUpStore(state => state.setIsFirstLaunch);
+
   useEffect(() => {
     (async () => {
       try {
         const FirstLaunch = await checkFirstLaunch();
         if (FirstLaunch) {
-          setFirstLaunch(true);
+          setIsFirstLaunch(true);
         } else {
-          setFirstLaunch(false);
+          setIsFirstLaunch(false);
         }
       } catch (err) {
         console.log(err);
@@ -38,7 +42,6 @@ function useGetOnboardingStatus() {
       }
     })();
   }, []);
-  return {isFirstLaunch, isFirstLaunchLoading, setFirstLaunch};
 }
 
 export default useGetOnboardingStatus;

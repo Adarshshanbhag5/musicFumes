@@ -20,3 +20,13 @@ export type musicTrack = {
   contentType: string;
   artwork: string;
 };
+
+export type paletteType = {
+  darkVibrant: string;
+  lightVibrant: string;
+  darkMuted: string;
+  lightMuted: string;
+  rgb: string;
+  titleTextColor: string;
+  bodyTextColor: string;
+};

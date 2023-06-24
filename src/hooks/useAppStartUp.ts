@@ -1,6 +1,4 @@
 import {useEffect, useState} from 'react';
-// import useGetOnboardingStatus from './useGetOnboardingStatus';
-// import {StoragePermissionContext} from '../context/StoragePermissionContext';
 import useHydration from './useHydration';
 import SetupService from '../services/SetupService';
 import TrackPlayer from 'react-native-track-player';
@@ -31,12 +29,6 @@ async function checkFirstLaunch() {
 }
 
 export default function useAppstartUp(): returnType {
-  //   const {isFirstLaunch, isFirstLaunchLoading, setFirstLaunch} =
-  //     useGetOnboardingStatus();
-  //   const {permissionGranted, permissionLoading} = useContext(
-  //     StoragePermissionContext,
-  //   );
-
   const permissionGranted = useAppStartUpStore(
     state => state.permissionGranted,
   );

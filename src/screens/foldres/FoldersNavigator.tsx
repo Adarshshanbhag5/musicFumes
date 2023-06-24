@@ -14,7 +14,13 @@ const FoldersNavigator = () => {
         component={Folders}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="Music" component={FolderInner} />
+      <Stack.Screen
+        name="Music"
+        component={FolderInner}
+        options={({route}) => ({
+          headerTitle: route.params.path.split('/').pop(),
+        })}
+      />
     </Stack.Navigator>
   );
 };
