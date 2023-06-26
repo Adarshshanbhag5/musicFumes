@@ -2,8 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
 import {musicData, musicTrack} from '../types/data';
-import {NativeModules, Platform} from 'react-native';
-const {RNGetAudioFiles} = NativeModules;
+import RNGetAudioFiles from '../RNMusicModule';
 
 interface FileSystemStore {
   mediaStoreData: musicTrack[];
@@ -37,21 +36,6 @@ export const useFileSystemStore = create<FileSystemStore>()(
     },
   ),
 );
-
-function getSongs() {
-  return new Promise<musicData[]>((resolve, reject) => {
-    if (Platform.OS === 'android') {
-      RNGetAudioFiles.getSong(
-        (songs: musicData[]) => {
-          resolve(songs);
-        },
-        (error: any) => {
-          reject(error);
-        },
-      );
-    }
-  });
-}
 
 function groupMediaStoreData(data: musicData[]): groupMediaStoreDataReturnType {
   const groupedData: groupType = data.reduce<groupType>(
@@ -108,7 +92,10 @@ function groupMediaStoreData(data: musicData[]): groupMediaStoreDataReturnType {
 
 export async function getAllSongs() {
   try {
-    const res = await getSongs();
+    const res = await RNGetAudioFiles.getSong({
+      minDuration: '1000',
+      excludeWhatsApp: true,
+    });
     if (res) {
       const {albumArray, folderArray, musicTrackArray} =
         groupMediaStoreData(res);
