@@ -2,8 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {create} from 'zustand';
 import {persist, createJSONStorage} from 'zustand/middleware';
 import {paletteType} from '../types/data';
-import {NativeModules} from 'react-native';
-const {RNGetAudioFiles} = NativeModules;
+import RNGetAudioFiles from '../RNMusicModule';
 
 interface AppThemeStore {
   darkMode: boolean;
@@ -70,7 +69,6 @@ const useAppThemeStore = create<AppThemeStore>()(
 );
 
 export const useDarkMode = () => {
-  // const [themeStyle, setThemeStyle] = useState<modeType>(darkMode);
   let themeStyle: modeType = darkMode;
   const dark = useAppThemeStore(state => state.darkMode);
   if (dark) {
@@ -78,13 +76,6 @@ export const useDarkMode = () => {
   } else {
     themeStyle = lightMode;
   }
-  // useEffect(() => {
-  //   if (dark) {
-  //     setThemeStyle(darkMode);
-  //   } else {
-  //     setThemeStyle(lightMode);
-  //   }
-  // }, [dark]);
   return themeStyle;
 };
 
