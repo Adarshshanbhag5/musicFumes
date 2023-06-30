@@ -8,8 +8,6 @@ import {musicTrack} from '../../types/data';
 import {FolderStackScreenProps} from '../../types/navigation';
 import {useDarkMode} from '../../zustand/store';
 
-// import RNFS from 'react-native-fs';
-
 const Folders = ({navigation}: FolderStackScreenProps<'InternalStorage'>) => {
   const folderArray = useFileSystemStore(state => state.folders);
   const themeStyle = useDarkMode();
