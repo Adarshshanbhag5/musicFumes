@@ -8,7 +8,9 @@ const Stack = createNativeStackNavigator<AlbumStackParamlist>();
 
 export default function AlbumsNavigator() {
   return (
-    <Stack.Navigator initialRouteName="albums">
+    <Stack.Navigator
+      initialRouteName="albums"
+      screenOptions={{animation: 'fade_from_bottom'}}>
       <Stack.Screen
         name="albums"
         component={Albums}

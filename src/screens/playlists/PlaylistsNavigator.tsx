@@ -11,7 +11,9 @@ const Stack = createNativeStackNavigator<PlaylistStackParamlist>();
 
 const PlaylistsNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="playlists">
+    <Stack.Navigator
+      initialRouteName="playlists"
+      screenOptions={{animation: 'fade_from_bottom'}}>
       <Stack.Screen
         name="playlists"
         component={Playlists}

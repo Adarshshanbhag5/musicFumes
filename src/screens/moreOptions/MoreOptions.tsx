@@ -9,7 +9,9 @@ const Stack = createNativeStackNavigator<MoreOptionsStackParamlist>();
 
 const MoreOptions = () => {
   return (
-    <Stack.Navigator initialRouteName="more">
+    <Stack.Navigator
+      initialRouteName="more"
+      screenOptions={{animation: 'fade_from_bottom'}}>
       <Stack.Screen
         name="more"
         component={MoreOptionsInner}

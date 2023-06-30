@@ -32,6 +32,7 @@ const RootStackScreen = () => {
             screenOptions={{
               presentation: 'transparentModal',
               headerShown: false,
+              animation: 'slide_from_bottom',
             }}>
             <RootStack.Screen name="input_text" component={InputModal} />
             <RootStack.Screen

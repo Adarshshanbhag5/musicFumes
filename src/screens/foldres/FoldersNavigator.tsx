@@ -8,7 +8,9 @@ const Stack = createNativeStackNavigator<FoldersStackParamlist>();
 
 const FoldersNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="InternalStorage">
+    <Stack.Navigator
+      initialRouteName="InternalStorage"
+      screenOptions={{animation: 'fade_from_bottom'}}>
       <Stack.Screen
         name="InternalStorage"
         component={Folders}
