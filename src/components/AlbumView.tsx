@@ -24,7 +24,7 @@ const AlbumView = ({name, album, onPress}: AlbumViewType) => {
           source={
             album[0].artwork
               ? {uri: album[0].artwork}
-              : require('../assets/musicfumes_placeholder_dark.jpg')
+              : require('../assets/musicfumes_placeholder_dark.png')
           }
           style={styles.image}
         />

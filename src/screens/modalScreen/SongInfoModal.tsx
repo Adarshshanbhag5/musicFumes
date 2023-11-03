@@ -32,7 +32,7 @@ const SongInfoModal = ({
               source={
                 route.params.data.artwork
                   ? {uri: route.params.data.artwork}
-                  : require('../../assets/musicfumes_placeholder_dark.jpg')
+                  : require('../../assets/musicfumes_placeholder_dark.png')
               }
               style={styles.albumArt}
             />

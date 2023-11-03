@@ -37,7 +37,7 @@ const SongListView = ({data, onPress}: SongListViewProps) => {
             source={
               data.artwork
                 ? {uri: data.artwork}
-                : require('../assets/musicfumes_placeholder_dark.jpg')
+                : require('../assets/musicfumes_placeholder_dark.png')
             }
             style={styles.albumArt}
           />
