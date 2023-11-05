@@ -1,16 +1,11 @@
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native';
+import {FlatList, KeyboardAvoidingView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import {useFileSystemStore} from '../../zustand/FileSystemStore';
 import {useDarkMode} from '../../zustand/store';
 import {AlbumStackScreenProps} from '../../types/navigation';
 import AlbumView from '../../components/AlbumView';
 import {musicTrack} from '../../types/data';
+import {Searchbar} from 'react-native-paper';
 
 type renderItemProp = {
   item: [string, musicTrack[]];
@@ -51,7 +46,7 @@ const Albums = ({navigation}: AlbumStackScreenProps<'albums'>) => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.search__box__container}>
-        <TextInput
+        {/* <TextInput
           style={{
             ...styles.searchBox,
             color: themeStyle.color,
@@ -59,6 +54,11 @@ const Albums = ({navigation}: AlbumStackScreenProps<'albums'>) => {
           }}
           placeholder="Search by album"
           placeholderTextColor={themeStyle.color}
+          value={input}
+          onChangeText={setInput}
+        /> */}
+        <Searchbar
+          placeholder="Search by album"
           value={input}
           onChangeText={setInput}
         />
@@ -81,16 +81,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   search__box__container: {
-    marginBottom: 20,
+    marginVertical: 20,
+    marginHorizontal: 10,
     alignItems: 'center',
-  },
-  searchBox: {
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    fontSize: 16,
-    marginTop: 20,
-    width: '90%',
-    borderWidth: 1,
-    borderRadius: 8,
   },
 });

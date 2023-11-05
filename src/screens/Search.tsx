@@ -1,10 +1,4 @@
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native';
+import {FlatList, KeyboardAvoidingView, StyleSheet, View} from 'react-native';
 import React, {useCallback, useMemo, useState} from 'react';
 import SongListView from '../components/SongListView';
 import AddQueueService from '../services/AddQueueService';
@@ -12,6 +6,7 @@ import {MusicFumesScreenProps} from '../types/navigation';
 import {useFileSystemStore} from '../zustand/FileSystemStore';
 import {musicTrack} from '../types/data';
 import {useDarkMode} from '../zustand/store';
+import {Searchbar} from 'react-native-paper';
 type renderItemProps = {
   item: musicTrack;
   index: number;
@@ -51,7 +46,7 @@ const Search = ({navigation}: MusicFumesScreenProps<'Search'>) => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.search__box__container}>
-        <TextInput
+        {/* <TextInput
           style={{
             ...styles.searchBox,
             color: themeStyle.color,
@@ -59,6 +54,12 @@ const Search = ({navigation}: MusicFumesScreenProps<'Search'>) => {
           }}
           placeholder="Search by title,album,artist"
           placeholderTextColor={themeStyle.color}
+          value={input}
+          onChangeText={setInput}
+        /> */}
+
+        <Searchbar
+          placeholder="Search by title,album,artist"
           value={input}
           onChangeText={setInput}
         />
@@ -81,16 +82,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   search__box__container: {
-    marginBottom: 20,
+    marginVertical: 20,
+    marginHorizontal: 10,
     alignItems: 'center',
-  },
-  searchBox: {
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    fontSize: 16,
-    marginTop: 20,
-    width: '90%',
-    borderWidth: 1,
-    borderRadius: 8,
   },
 });

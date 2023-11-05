@@ -1,19 +1,14 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import GlobalStyle from '../../utils/GlobalStyle';
-import Touch from '../../utils/Touch';
-import PlaylistView from '../../components/PlaylistView';
-import globalStyle from '../../utils/GlobalStyle';
 import {PlaylistStackScreenProps} from '../../types/navigation';
-import useAppThemeStore, {useDarkMode} from '../../zustand/store';
+import useAppThemeStore from '../../zustand/store';
 import {useAppDataStore} from '../../zustand/AppDataStore';
+import {Button, Icon, List} from 'react-native-paper';
 
 const Playlists = ({navigation}: PlaylistStackScreenProps<'playlists'>) => {
   const playlist = useAppDataStore(state => state.playlist);
   const accentColor = useAppThemeStore(state => state.accentColor);
-  const themeStyle = useDarkMode();
+  // const themeStyle = useDarkMode();
 
   function createNewPlaylist() {
     navigation.navigate('input_text', {
@@ -28,71 +23,47 @@ const Playlists = ({navigation}: PlaylistStackScreenProps<'playlists'>) => {
 
   return (
     <View style={{flex: 1}}>
-      <Touch
-        onPress={() => {
-          navigation.navigate('AllSongs');
-        }}>
-        <View style={[GlobalStyle.flex__row__start, styles.list__container]}>
-          <MaterialCommunityIcons
-            name="folder-music"
-            color={themeStyle.color}
-            size={30}
-          />
-          <Text
-            style={{...styles.list__container__text, color: themeStyle.color}}>
-            All songs
-          </Text>
-        </View>
-      </Touch>
-      <Touch
-        onPress={() => {
-          navigation.navigate('favoritePlaylist');
-        }}>
-        <View style={[GlobalStyle.flex__row__start, styles.list__container]}>
-          <MaterialIcons name="favorite" color={themeStyle.color} size={30} />
-          <Text
-            style={{...styles.list__container__text, color: themeStyle.color}}>
-            Favorites
-          </Text>
-        </View>
-      </Touch>
-      <Touch
-        onPress={() => {
-          navigation.navigate('mostPlayed');
-        }}>
-        <View style={[GlobalStyle.flex__row__start, styles.list__container]}>
-          <MaterialIcons name="whatshot" color={themeStyle.color} size={30} />
-          <Text
-            style={{...styles.list__container__text, color: themeStyle.color}}>
-            Most Played
-          </Text>
-        </View>
-      </Touch>
-      {/* <Touch onPress={() => {}}>
-        <View style={[GlobalStyle.flex__row__start, styles.list__container]}>
-          <MaterialIcons
-            name="not-interested"
-            color={themeStyle.color}
-            size={30}
-          />
-          <Text
-            style={{...styles.list__container__text, color: themeStyle.color}}>
-            Not Played
-          </Text>
-        </View>
-      </Touch> */}
-      <View style={styles.playlist__container}>
-        <Text
+      <List.Section>
+        <List.Item
+          title="All songs"
+          titleStyle={{fontSize: 16}}
+          style={styles.list__container}
+          left={() => <Icon source="folder-music" size={30} />}
+          onPress={() => {
+            navigation.navigate('AllSongs');
+          }}
+        />
+        <List.Item
+          title="Favorites"
+          titleStyle={{fontSize: 16}}
+          style={styles.list__container}
+          left={() => <Icon source="heart" size={30} />}
+          onPress={() => {
+            navigation.navigate('favoritePlaylist');
+          }}
+        />
+        <List.Item
+          title="Most Played"
+          titleStyle={{fontSize: 16}}
+          style={styles.list__container}
+          left={() => <Icon source="fire" size={30} />}
+          onPress={() => {
+            navigation.navigate('mostPlayed');
+          }}
+        />
+      </List.Section>
+      <List.Section>
+        <List.Subheader
           style={{
             ...styles.playlist__text,
             color: accentColor ? accentColor : '#3AB0FF',
           }}>
           Your Playlists
-        </Text>
+        </List.Subheader>
         {playlist &&
           playlist.map((item, index) => (
-            <PlaylistView
-              name={item.name}
+            <List.Item
+              title={item.name}
               key={item.key}
               onPress={() => {
                 navigation.navigate('userPlaylist', {data: item});
@@ -100,28 +71,17 @@ const Playlists = ({navigation}: PlaylistStackScreenProps<'playlists'>) => {
               onLongPress={() => {
                 playlistLongPress(item, index);
               }}
+              left={props => <List.Icon {...props} icon="playlist-music" />}
             />
           ))}
-        <TouchableOpacity onPress={createNewPlaylist}>
-          <View
-            style={[globalStyle.flex__row__space, styles.add__playlist__btn]}>
-            <MaterialIcons
-              name="playlist-add"
-              color={accentColor ? accentColor : '#3AB0FF'}
-              size={26}
-              style={{fontWeight: 'bold'}}
-            />
-            <Text
-              style={{
-                color: themeStyle.color,
-                fontWeight: '600',
-                fontSize: 16,
-              }}>
-              Add playlist
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      </List.Section>
+      <Button
+        icon="playlist-plus"
+        mode="outlined"
+        onPress={createNewPlaylist}
+        style={styles.add__playlist__btn}>
+        Add playlist
+      </Button>
     </View>
   );
 };
@@ -130,31 +90,16 @@ export default Playlists;
 
 const styles = StyleSheet.create({
   list__container: {
-    marginVertical: 15,
-    marginHorizontal: 25,
-  },
-  list__container__text: {
-    fontSize: 16,
-    color: '#fff',
-    marginLeft: 15,
-  },
-  playlist__container: {
-    marginTop: 20,
+    marginHorizontal: 20,
   },
   playlist__text: {
-    fontWeight: '600',
+    fontWeight: 'bold',
     fontSize: 16,
-    marginLeft: 20,
-    marginBottom: 12,
   },
   add__playlist__btn: {
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#555',
     alignSelf: 'flex-start',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    borderRadius: 5,
     marginLeft: 20,
-    marginTop: 25,
+    marginTop: 15,
   },
 });
